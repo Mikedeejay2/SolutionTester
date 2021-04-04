@@ -60,7 +60,7 @@ public class CodingBatRunner {
         }
     }
 
-    private void runInternal(CodingBatSolution solution) throws
+    private boolean runInternal(CodingBatSolution solution) throws
             IllegalAccessException,
             InvocationTargetException {
         // Get the solution's class
@@ -267,10 +267,12 @@ public class CodingBatRunner {
         String[] actualStrs = new String[actualResults.length];
         String methodName = solutionMethod.getName();
 
+        // Iterate through the actual results
         for(int i = 0; i < actualResults.length; ++i) {
             Object curActualResult = actualResults[i];
             Object curExpectedResult = expectedResults[i];
 
+            // Identify success or failure
             boolean success = true;
             if(curActualResult.getClass() != curExpectedResult.getClass()) {
                 success = false;
@@ -285,12 +287,21 @@ public class CodingBatRunner {
             }
             successful[i] = success;
 
+            // Build the expected String
             StringBuilder mBuilder = new StringBuilder();
             mBuilder.append(methodName);
             mBuilder.append("(");
+            // If params length is one no need to travel deeper
             if(parameterTypes.length == 1) {
-                mBuilder.append(inputs[i]);
+                Object curInput = inputs[i];
+                // Check to make sure it's not itself an array
+                if(isArray.apply(curInput)) {
+                    mBuilder.append(Arrays.deepToString((Object[]) curInput));
+                } else {
+                    mBuilder.append(curInput);
+                }
             } else if(parameterTypes.length > 1) {
+                // Array detected, make sure it prints well
                 Object[] inputsArr = (Object[]) inputs[i];
                 for(int y = 0; y < inputsArr.length; ++y) {
                     Object subInput = inputsArr[y];
@@ -315,6 +326,7 @@ public class CodingBatRunner {
             longestExpected = Math.max(longestExpected, expectedStr.length());
             expectedStrs[i] = expectedStr;
 
+            // Build to actual String
             String actualStr = curActualResult.toString();
             if(isArray.apply(curActualResult)) {
                 actualStr = Arrays.deepToString((Object[]) curActualResult);
@@ -323,6 +335,7 @@ public class CodingBatRunner {
             longestActual = Math.max(longestActual, actualStr.length());
         }
 
+        // Post process the expected and actual Strings for length
         for(int i = 0; i < actualResults.length; ++i) {
             String curExpected = expectedStrs[i];
             int expectedDifference = longestExpected - curExpected.length();
@@ -343,6 +356,7 @@ public class CodingBatRunner {
             actualStrs[i] = actualBuilder.toString();
         }
 
+        // Create the output message
         StringBuilder outputBuilder = new StringBuilder();
         String expectedStr = "Expected";
         int expectedDifference = (int) Math.ceil((longestExpected - expectedStr.length()) / 2.0);
@@ -368,7 +382,22 @@ public class CodingBatRunner {
 
             outputBuilder.append("| ").append(curExpected).append(" | ").append(curActual).append(" | ").append(curSuccess).append(" |\n");
         }
+
+        // Calculate the amount correct
+        int total = actualResults.length;
+        int correct = 0;
+        for(int i = 0; i < successful.length; ++i) {
+            boolean cur = successful[i];
+            if(cur) ++correct;
+        }
+
+        if(correct == total) outputBuilder.append("All Correct");
+        else if(correct > (total / 2)) outputBuilder.append("Correct for more than half the tests");
+
         String toPrint = outputBuilder.toString();
+        // Print the output message
         System.out.println(toPrint);
+
+        return total == correct;
     }
 }
