@@ -22,8 +22,6 @@ public class Diff21 implements CodingBatSolution {
 
 
 
-
-
     @Inputs
     public Object[] inputs() {
         return new Object[] {
