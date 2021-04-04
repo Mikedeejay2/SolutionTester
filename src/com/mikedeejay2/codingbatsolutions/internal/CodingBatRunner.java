@@ -380,7 +380,7 @@ public class CodingBatRunner {
             String curActual = actualStrs[i];
             String curSuccess = successful[i] ? "OK" : "X ";
 
-            outputBuilder.append("| ").append(curExpected).append(" | ").append(curActual).append(" | ").append(curSuccess).append(" |\n");
+            outputBuilder.append("│ ").append(curExpected).append(" │ ").append(curActual).append(" │ ").append(curSuccess).append(" │\n");
         }
 
         // Calculate the amount correct
@@ -391,13 +391,15 @@ public class CodingBatRunner {
             if(cur) ++correct;
         }
 
-        if(correct == total) outputBuilder.append("All Correct");
+        outputBuilder.append("\n");
+        if(correct == total) outputBuilder.append("✓ All Correct");
         else if(correct > (total / 2)) outputBuilder.append("Correct for more than half the tests");
 
         String toPrint = outputBuilder.toString();
         // Print the output message
         System.out.println(toPrint);
 
+        // Return whether the entire answer is correct or not
         return total == correct;
     }
 }
