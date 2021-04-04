@@ -26,7 +26,6 @@ public boolean nearHundred(int n) {
 
 
 
-
     @Inputs
     public Object[] inputs() {
         return new Object[] {
