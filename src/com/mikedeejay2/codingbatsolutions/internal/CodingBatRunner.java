@@ -52,12 +52,13 @@ public class CodingBatRunner {
 
 
 
-    public void run(CodingBatSolution solution) {
+    public boolean run(CodingBatSolution solution) {
         try {
-            runInternal(solution);
+            return runInternal(solution);
         }catch(IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
+        return false;
     }
 
     private boolean runInternal(CodingBatSolution solution) throws

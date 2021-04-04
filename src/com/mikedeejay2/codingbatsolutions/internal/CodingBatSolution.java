@@ -1,5 +1,14 @@
 package com.mikedeejay2.codingbatsolutions.internal;
 
-public interface CodingBatSolution {
+import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+public interface CodingBatSolution {
+    @Test
+    default void test() {
+        CodingBatRunner runner = new CodingBatRunner();
+        boolean success = runner.run(this);
+        assertTrue(success);
+    }
 }
