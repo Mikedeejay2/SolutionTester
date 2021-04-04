@@ -9,6 +9,6 @@ public interface CodingBatSolution {
     default void testJUnit() {
         CodingBatRunner runner = new CodingBatRunner();
         boolean success = runner.run(this);
-        assertTrue(success);
+        assertTrue(success, "Some tests failed. View above for test results.");
     }
 }
