@@ -24,7 +24,7 @@ public class TestSolution implements CodingBatSolution {
     public Object[] results() {
         return new Object[] {
                 "hi!2",
-                "bye!99",
+                "bye!4",
                 "How are you?1337"
         };
     }
