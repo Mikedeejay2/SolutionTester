@@ -15,29 +15,27 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class CodingBatRunner {
-    private static final Function<Object, Boolean> isArray = o -> {
-        return o instanceof Object[] ||
-               o instanceof byte[] ||
-               o instanceof short[] ||
-               o instanceof int[] ||
-               o instanceof long[] ||
-               o instanceof char[] ||
-               o instanceof float[] ||
-               o instanceof double[] ||
-               o instanceof boolean[];
-    };
+    private static final Function<Object, Boolean> isArray = o ->
+        o instanceof Object[] ||
+        o instanceof byte[] ||
+        o instanceof short[] ||
+        o instanceof int[] ||
+        o instanceof long[] ||
+        o instanceof char[] ||
+        o instanceof float[] ||
+        o instanceof double[] ||
+        o instanceof boolean[];
 
-    private static final BiFunction<Class<?>, Object, Boolean> isInstance = (c, o) -> {
-        return (o.getClass() == c) ||
-               (o.getClass() == Byte.class && c == byte.class) ||
-               (o.getClass() == Short.class && c == short.class) ||
-               (o.getClass() == Integer.class && c == int.class) ||
-               (o.getClass() == Long.class && c == long.class) ||
-               (o.getClass() == Character.class && c == char.class) ||
-               (o.getClass() == Float.class && c == float.class) ||
-               (o.getClass() == Double.class && c == double.class) ||
-               (o.getClass() == Boolean.class && c == boolean.class);
-    };
+    private static final BiFunction<Class<?>, Object, Boolean> isInstance = (c, o) ->
+        (o.getClass() == c) ||
+        (o.getClass() == Byte.class && c == byte.class) ||
+        (o.getClass() == Short.class && c == short.class) ||
+        (o.getClass() == Integer.class && c == int.class) ||
+        (o.getClass() == Long.class && c == long.class) ||
+        (o.getClass() == Character.class && c == char.class) ||
+        (o.getClass() == Float.class && c == float.class) ||
+        (o.getClass() == Double.class && c == double.class) ||
+        (o.getClass() == Boolean.class && c == boolean.class);
 
     private final boolean debugMode;
 
@@ -115,7 +113,7 @@ public class CodingBatRunner {
 
         // The inputs method doesn't take parameters
         if(inputsMethod.getParameterCount() != 0) {
-            throw new IllegalArgumentException("Inputs method does not accept paramters in class " + solutionClass.getName());
+            throw new IllegalArgumentException("Inputs method does not accept parameters in class " + solutionClass.getName());
         }
 
         // Get the result type class of the solution method
@@ -230,7 +228,7 @@ public class CodingBatRunner {
                     if(!isInstance.apply(parameterTypes[si], subInput)) {
                         throw new IllegalArgumentException(
                                 String.format("The input in index %d in sub-index %d %s is not assignable to the parameter type of %s in class %s",
-                                i, si, subInput.toString(), parameterTypes[si].getSimpleName(), solutionClass.getName()));
+                                i, si, subInput, parameterTypes[si].getSimpleName(), solutionClass.getName()));
                     }
                 }
             } else {
@@ -238,7 +236,7 @@ public class CodingBatRunner {
                 if(!isInstance.apply(parameterTypes[0], curInput)) {
                     throw new IllegalArgumentException(
                         String.format("The input %s is not assignable to the parameter type of %s in class %s",
-                        curInput.toString(), parameterTypes[0].getSimpleName(), solutionClass.getName()));
+                        curInput, parameterTypes[0].getSimpleName(), solutionClass.getName()));
                 }
             }
         }
@@ -320,7 +318,7 @@ public class CodingBatRunner {
             if(isArray.apply(curExpectedResult)) {
                 mBuilder.append(Arrays.deepToString((Object[]) curExpectedResult));
             } else {
-                mBuilder.append(curExpectedResult.toString());
+                mBuilder.append(curExpectedResult);
             }
 
             String expectedStr = mBuilder.toString();
