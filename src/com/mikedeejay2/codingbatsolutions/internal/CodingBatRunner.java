@@ -7,14 +7,12 @@ import com.mikedeejay2.codingbatsolutions.internal.annotations.Solution;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class CodingBatRunner {
+public final class CodingBatRunner {
     private static final Function<Object, Boolean> isArray = o ->
         o instanceof Object[] ||
         o instanceof byte[] ||
@@ -36,6 +34,33 @@ public class CodingBatRunner {
         (o.getClass() == Float.class && c == float.class) ||
         (o.getClass() == Double.class && c == double.class) ||
         (o.getClass() == Boolean.class && c == boolean.class);
+
+    private static final class SolutionData {
+        public Class<?> solutionClass;
+        public Method[] methods;
+        public Method inputsMethod;
+        public Method resultsMethod;
+        public Method solutionMethod;
+        public Class<?> resultType;
+        public Class<?>[] parameterTypes;
+        public Class<?> resultsResultType;
+        public Class<?> inputsResultType;
+        public int inputsResultArrDepth;
+        public int resultsResultArrDepth;
+        public int solutionResultArrDepth;
+        public Object[] inputs;
+        public Object[] expectedResults;
+        public Object[] actualResults;
+        public boolean[] successful;
+        public int longestExpected;
+        public int longestActual;
+        public String[] expectedStrs;
+        public String[] actualStrs;
+        public String methodName;
+        public int total;
+        public int correct;
+        public boolean passed;
+    }
 
     private final boolean debugMode;
 
@@ -62,16 +87,39 @@ public class CodingBatRunner {
     private boolean runInternal(CodingBatSolution solution) throws
             IllegalAccessException,
             InvocationTargetException {
+        // Create a new SolutionData structure
+        SolutionData data = new SolutionData();
+        generateData(solution, data);
+        printResult(data);
+        return data.passed;
+    }
+
+    private void generateData(CodingBatSolution solution, SolutionData data) throws
+        IllegalAccessException,
+        InvocationTargetException {
+        setupData(solution, data);
+        validateData(data);
+        getData(solution, data);
+        processData(data);
+        postProcessData(data);
+
+        // Get whether the entire answer is correct or not
+        data.passed = data.total == data.correct;
+    }
+
+    private void setupData(CodingBatSolution solution, SolutionData data) throws
+        IllegalAccessException,
+        InvocationTargetException {
         // Get the solution's class
-        Class<?> solutionClass = solution.getClass();
+        data.solutionClass = solution.getClass();
         // Get all methods
-        Method[] methods = solutionClass.getDeclaredMethods();
+        data.methods = data.solutionClass.getDeclaredMethods();
         // Initialize needed methods
-        Method inputsMethod = null;
-        Method resultsMethod = null;
-        Method solutionMethod = null;
+        data.inputsMethod = null;
+        data.resultsMethod = null;
+        data.solutionMethod = null;
         // Iterate through all methods to find the ones that we need
-        for(Method method : methods) {
+        for(Method method : data.methods) {
             // Set the method as accessible, it might be private
             method.setAccessible(true);
             // Attempt to get all annotations on the method
@@ -89,119 +137,121 @@ public class CodingBatRunner {
             if(test > 1) {
                 throw new IllegalArgumentException(
                     String.format("Too many annotations on method %s in class %s",
-                    method.getName(), solutionClass.getName()));
+                    method.getName(), data.solutionClass.getName()));
             }
             // Set the respective method
             if(inputsAnnotation != null) {
-                inputsMethod = method;
+                data.inputsMethod = method;
             } else if(resultsAnnotation != null) {
-                resultsMethod = method;
+                data.resultsMethod = method;
             } else if(solutionAnnotation != null) {
-                solutionMethod = method;
+                data.solutionMethod = method;
             }
         }
 
         // If any of the required methods are null thrown an exception
-        if(inputsMethod == null || resultsMethod == null || solutionMethod == null) {
-            throw new IllegalArgumentException("Missing annotation in class " + solutionClass.getName());
+        if(data.inputsMethod == null || data.resultsMethod == null || data.solutionMethod == null) {
+            throw new IllegalArgumentException("Missing annotation in class " + data.solutionClass.getName());
         }
 
         // The results method doesn't take parameters
-        if(resultsMethod.getParameterCount() != 0) {
-            throw new IllegalArgumentException("Results method does not accept parameters in class " + solutionClass.getName());
+        if(data.resultsMethod.getParameterCount() != 0) {
+            throw new IllegalArgumentException("Results method does not accept parameters in class " + data.solutionClass.getName());
         }
 
         // The inputs method doesn't take parameters
-        if(inputsMethod.getParameterCount() != 0) {
-            throw new IllegalArgumentException("Inputs method does not accept parameters in class " + solutionClass.getName());
+        if(data.inputsMethod.getParameterCount() != 0) {
+            throw new IllegalArgumentException("Inputs method does not accept parameters in class " + data.solutionClass.getName());
         }
 
         // Get the result type class of the solution method
-        Class<?> resultType = solutionMethod.getReturnType();
+        data.resultType = data.solutionMethod.getReturnType();
         // Get the parameter types class array of the solution method
-        Class<?>[] parameterTypes = solutionMethod.getParameterTypes();
+        data.parameterTypes = data.solutionMethod.getParameterTypes();
 
         // Get the result type class of the results method
-        Class<?> resultsResultType = resultsMethod.getReturnType();
+        data.resultsResultType = data.resultsMethod.getReturnType();
         // Get the result type class of the inputs method
-        Class<?> inputsResultType = inputsMethod.getReturnType();
+        data.inputsResultType = data.inputsMethod.getReturnType();
 
         if(debugMode) {
-            System.out.println("Result Type: " + resultType.getName());
-            System.out.println("Parameter Types: " + Arrays.stream(parameterTypes).map(Class::getName).collect(Collectors.joining(", ")));
-            System.out.println("Results Result Type: " + resultsResultType.getName());
-            System.out.println("Inputs Results Type: " + inputsResultType.getName());
+            System.out.println("Result Type: " + data.resultType.getName());
+            System.out.println("Parameter Types: " + Arrays.stream(data.parameterTypes).map(Class::getName).collect(Collectors.joining(", ")));
+            System.out.println("Results Result Type: " + data.resultsResultType.getName());
+            System.out.println("Inputs Results Type: " + data.inputsResultType.getName());
         }
 
         // The inputs method should always return an array
-        if(!inputsResultType.isArray()) {
-            throw new IllegalArgumentException("Inputs method must return an array in class " + solutionClass.getName());
+        if(!data.inputsResultType.isArray()) {
+            throw new IllegalArgumentException("Inputs method must return an array in class " + data.solutionClass.getName());
         }
 
         // The results method should always return an array
-        if(!resultsResultType.isArray()) {
-            throw new IllegalArgumentException("Results method must return an array in class " + solutionClass.getName());
+        if(!data.resultsResultType.isArray()) {
+            throw new IllegalArgumentException("Results method must return an array in class " + data.solutionClass.getName());
         }
 
         // Calculate the array depth of the inputs method result
-        int inputsResultArrDepth = 0;
+        data.inputsResultArrDepth = 0;
         {
-            Class<?> curInputsResultType = inputsResultType;
+            Class<?> curInputsResultType = data.inputsResultType;
             while(curInputsResultType.isArray()) {
-                inputsResultArrDepth++;
+                data.inputsResultArrDepth++;
                 curInputsResultType = curInputsResultType.getComponentType();
             }
         }
 
         // Calculate the array depth of the results method result
-        int resultsResultArrDepth = 0;
+        data.resultsResultArrDepth = 0;
         {
-            Class<?> curResultsResultType = resultsResultType;
+            Class<?> curResultsResultType = data.resultsResultType;
             while(curResultsResultType.isArray()) {
-                resultsResultArrDepth++;
+                data.resultsResultArrDepth++;
                 curResultsResultType = curResultsResultType.getComponentType();
             }
         }
 
         // Calculate the array depth of the solution method result
-        int solutionResultArrDepth = 0;
-        if(resultType.isArray()) {
-            Class<?> curSolutionResultType = resultType;
+        data.solutionResultArrDepth = 0;
+        if(data.resultType.isArray()) {
+            Class<?> curSolutionResultType = data.resultType;
             while(curSolutionResultType.isArray()) {
-                solutionResultArrDepth++;
+                data.solutionResultArrDepth++;
                 curSolutionResultType = curSolutionResultType.getComponentType();
             }
         }
 
         if(debugMode) {
-            System.out.println("Inputs Result Array Depth: " + inputsResultArrDepth);
-            System.out.println("Results Result Array Depth: " + resultsResultArrDepth);
-            System.out.println("Solution Result Array Depth: " + solutionResultArrDepth);
+            System.out.println("Inputs Result Array Depth: " + data.inputsResultArrDepth);
+            System.out.println("Results Result Array Depth: " + data.resultsResultArrDepth);
+            System.out.println("Solution Result Array Depth: " + data.solutionResultArrDepth);
         }
 
         // The solution method result array depth should be 1 less than the results method result array depth
-        if(solutionResultArrDepth != resultsResultArrDepth - 1) {
-            throw new IllegalArgumentException("The array depth of solution method should be 1 less than the array depth of the results method result in class " + solutionClass.getName());
+        if(data.solutionResultArrDepth != data.resultsResultArrDepth - 1) {
+            throw new IllegalArgumentException("The array depth of solution method should be 1 less than the array depth of the results method result in class " + data.solutionClass.getName());
         }
 
         // Get the inputs from the inputs method
-        Object[] inputs = (Object[]) inputsMethod.invoke(solution);
+        data.inputs = (Object[]) data.inputsMethod.invoke(solution);
         // Get the expected results from the results method
-        Object[] expectedResults = (Object[]) resultsMethod.invoke(solution);
+        data.expectedResults = (Object[]) data.resultsMethod.invoke(solution);
 
         // The inputs length should be equal to the expected results length
-        if(inputs.length != expectedResults.length) {
-            throw new IllegalArgumentException("The result of inputs method and the results of results method do not match in length for class " + solutionClass.getName());
+        if(data.inputs.length != data.expectedResults.length) {
+            throw new IllegalArgumentException("The result of inputs method and the results of results method do not match in length for class " + data.solutionClass.getName());
         }
+    }
 
+    private void validateData(SolutionData data) {
         // Input validation begin
-        for(int i = 0; i < inputs.length; ++i) {
-            Object curInput = inputs[i];
+        for(int i = 0; i < data.inputs.length; ++i) {
+            Object curInput = data.inputs[i];
             // Inputs cannot be null
             if(curInput == null) {
                 throw new IllegalArgumentException(
                     String.format("Input at index %d was null for class %s",
-                    i, solutionClass.getName()));
+                                  i, data.solutionClass.getName()));
             }
 
             // If it's an array we need to go deeper
@@ -209,10 +259,10 @@ public class CodingBatRunner {
                 // Get the array input cast
                 Object[] curInputArr = (Object[]) curInput;
                 // Parameter types length and input array length need to be the same size
-                if(curInputArr.length != parameterTypes.length) {
+                if(curInputArr.length != data.parameterTypes.length) {
                     throw new IllegalArgumentException(
                         String.format("The input of index %d is not the same length of the solution's parameters in class %s",
-                        i, solutionClass.getName()));
+                                      i, data.solutionClass.getName()));
                 }
                 // Ensure that the data types are matching
                 for(int si = 0; si < curInputArr.length; ++si) {
@@ -222,54 +272,60 @@ public class CodingBatRunner {
                     if(subInput == null) {
                         throw new IllegalArgumentException(
                             String.format("Input at index %d in sub-index %d was null for class %s",
-                            i, si, solutionClass.getName()));
+                                          i, si, data.solutionClass.getName()));
                     }
                     // The parameter types must be matching (ignore primitives, they don't match to objects)
-                    if(!isInstance.apply(parameterTypes[si], subInput)) {
+                    if(!isInstance.apply(data.parameterTypes[si], subInput)) {
                         throw new IllegalArgumentException(
-                                String.format("The input in index %d in sub-index %d %s is not assignable to the parameter type of %s in class %s",
-                                i, si, subInput, parameterTypes[si].getSimpleName(), solutionClass.getName()));
+                            String.format("The input in index %d in sub-index %d %s is not assignable to the parameter type of %s in class %s",
+                                          i, si, subInput, data.parameterTypes[si].getSimpleName(), data.solutionClass.getName()));
                     }
                 }
             } else {
                 // The parameter types must be matching
-                if(!isInstance.apply(parameterTypes[0], curInput)) {
+                if(!isInstance.apply(data.parameterTypes[0], curInput)) {
                     throw new IllegalArgumentException(
                         String.format("The input %s is not assignable to the parameter type of %s in class %s",
-                        curInput, parameterTypes[0].getSimpleName(), solutionClass.getName()));
+                                      curInput, data.parameterTypes[0].getSimpleName(), data.solutionClass.getName()));
                 }
             }
         }
         // Input validation end
+    }
 
+    private void getData(CodingBatSolution solution, SolutionData data) throws
+        IllegalAccessException,
+        InvocationTargetException {
         // Get the actual results
-        Object[] actualResults = new Object[inputs.length];
-        for(int i = 0; i < inputs.length; ++i) {
-            Object curInput = inputs[i];
+        data.actualResults = new Object[data.inputs.length];
+        for(int i = 0; i < data.inputs.length; ++i) {
+            Object curInput = data.inputs[i];
             // Must check if it's an array because reflection is odd
             if(isArray.apply(curInput)) {
-                actualResults[i] = solutionMethod.invoke(solution, (Object[]) curInput);
+                data.actualResults[i] = data.solutionMethod.invoke(solution, (Object[]) curInput);
             } else {
-                actualResults[i] = solutionMethod.invoke(solution, curInput);
+                data.actualResults[i] = data.solutionMethod.invoke(solution, curInput);
             }
         }
 
         if(debugMode) {
-            System.out.println("Actual Outputs: " + Arrays.toString(actualResults));
+            System.out.println("Actual Outputs: " + Arrays.toString(data.actualResults));
         }
+    }
 
+    private void processData(SolutionData data) {
         // Compare actual results with expected results, print results
-        boolean[] successful = new boolean[actualResults.length];
-        int longestExpected = 0;
-        int longestActual = 0;
-        String[] expectedStrs = new String[actualResults.length];
-        String[] actualStrs = new String[actualResults.length];
-        String methodName = solutionMethod.getName();
+        data.successful = new boolean[data.actualResults.length];
+        data.longestExpected = 0;
+        data.longestActual = 0;
+        data.expectedStrs = new String[data.actualResults.length];
+        data.actualStrs = new String[data.actualResults.length];
+        data.methodName = data.solutionMethod.getName();
 
         // Iterate through the actual results
-        for(int i = 0; i < actualResults.length; ++i) {
-            Object curActualResult = actualResults[i];
-            Object curExpectedResult = expectedResults[i];
+        for(int i = 0; i < data.actualResults.length; ++i) {
+            Object curActualResult = data.actualResults[i];
+            Object curExpectedResult = data.expectedResults[i];
 
             // Identify success or failure
             boolean success = true;
@@ -284,24 +340,24 @@ public class CodingBatRunner {
             } else if(!curActualResult.equals(curExpectedResult)) {
                 success = false;
             }
-            successful[i] = success;
+            data.successful[i] = success;
 
             // Build the expected String
             StringBuilder mBuilder = new StringBuilder();
-            mBuilder.append(methodName);
+            mBuilder.append(data.methodName);
             mBuilder.append("(");
             // If params length is one no need to travel deeper
-            if(parameterTypes.length == 1) {
-                Object curInput = inputs[i];
+            if(data.parameterTypes.length == 1) {
+                Object curInput = data.inputs[i];
                 // Check to make sure it's not itself an array
                 if(isArray.apply(curInput)) {
                     mBuilder.append(Arrays.deepToString((Object[]) curInput));
                 } else {
                     mBuilder.append(curInput);
                 }
-            } else if(parameterTypes.length > 1) {
+            } else if(data.parameterTypes.length > 1) {
                 // Array detected, make sure it prints well
-                Object[] inputsArr = (Object[]) inputs[i];
+                Object[] inputsArr = (Object[]) data.inputs[i];
                 for(int y = 0; y < inputsArr.length; ++y) {
                     Object subInput = inputsArr[y];
                     if(isArray.apply(subInput)) {
@@ -309,7 +365,7 @@ public class CodingBatRunner {
                     } else {
                         mBuilder.append(subInput.toString());
                     }
-                    if(y != parameterTypes.length - 1) {
+                    if(y != data.parameterTypes.length - 1) {
                         mBuilder.append(", ");
                     }
                 }
@@ -322,43 +378,55 @@ public class CodingBatRunner {
             }
 
             String expectedStr = mBuilder.toString();
-            longestExpected = Math.max(longestExpected, expectedStr.length());
-            expectedStrs[i] = expectedStr;
+            data.longestExpected = Math.max(data.longestExpected, expectedStr.length());
+            data.expectedStrs[i] = expectedStr;
 
             // Build to actual String
             String actualStr = curActualResult.toString();
             if(isArray.apply(curActualResult)) {
                 actualStr = Arrays.deepToString((Object[]) curActualResult);
             }
-            actualStrs[i] = actualStr;
-            longestActual = Math.max(longestActual, actualStr.length());
+            data.actualStrs[i] = actualStr;
+            data.longestActual = Math.max(data.longestActual, actualStr.length());
         }
 
+        // Calculate the amount correct
+        data.total = data.actualResults.length;
+        data.correct = 0;
+        for(int i = 0; i < data.successful.length; ++i) {
+            boolean cur = data.successful[i];
+            if(cur) ++data.correct;
+        }
+    }
+
+    private void postProcessData(SolutionData data) {
         // Post process the expected and actual Strings for length
-        for(int i = 0; i < actualResults.length; ++i) {
-            String curExpected = expectedStrs[i];
-            int expectedDifference = longestExpected - curExpected.length();
+        for(int i = 0; i < data.actualResults.length; ++i) {
+            String curExpected = data.expectedStrs[i];
+            int expectedDifference = data.longestExpected - curExpected.length();
             StringBuilder expectedBuilder = new StringBuilder();
             expectedBuilder.append(curExpected);
             for(int x = 0; x < expectedDifference; ++x) {
                 expectedBuilder.append(" ");
             }
-            expectedStrs[i] = expectedBuilder.toString();
+            data.expectedStrs[i] = expectedBuilder.toString();
 
-            String curActual = actualStrs[i];
-            int actualDifference = longestActual - curActual.length();
+            String curActual = data.actualStrs[i];
+            int actualDifference = data.longestActual - curActual.length();
             StringBuilder actualBuilder = new StringBuilder();
             actualBuilder.append(curActual);
             for(int x = 0; x < actualDifference; ++x) {
                 actualBuilder.append(" ");
             }
-            actualStrs[i] = actualBuilder.toString();
+            data.actualStrs[i] = actualBuilder.toString();
         }
+    }
 
+    private void printResult(SolutionData data) {
         // Create the output message
         StringBuilder outputBuilder = new StringBuilder();
         String expectedStr = "Expected";
-        int expectedDifference = (int) Math.ceil((longestExpected - expectedStr.length()) / 2.0);
+        int expectedDifference = (int) Math.ceil((data.longestExpected - expectedStr.length()) / 2.0);
         StringBuilder expectedSpacingBuilder = new StringBuilder();
         for(int i = 0; i < expectedDifference; ++i) {
             expectedSpacingBuilder.append(" ");
@@ -366,7 +434,7 @@ public class CodingBatRunner {
         String expectedSpacing = expectedSpacingBuilder.toString();
         outputBuilder.append("  ").append(expectedSpacing).append(expectedStr).append(expectedSpacing);
         String runStr = "Run";
-        int runDifference = (int) Math.ceil((longestActual - runStr.length()) / 2.0);
+        int runDifference = (int) Math.ceil((data.longestActual - runStr.length()) / 2.0);
         StringBuilder actualSpacingBuilder = new StringBuilder();
         for(int i = 0; i < runDifference; ++i) {
             actualSpacingBuilder.append(" ");
@@ -374,31 +442,20 @@ public class CodingBatRunner {
         String actualSpacing = actualSpacingBuilder.toString();
         outputBuilder.append("  ").append(actualSpacing).append(runStr);
         outputBuilder.append("\n");
-        for(int i = 0; i < actualResults.length; ++i) {
-            String curExpected = expectedStrs[i];
-            String curActual = actualStrs[i];
-            String curSuccess = successful[i] ? "OK" : "X ";
+        for(int i = 0; i < data.actualResults.length; ++i) {
+            String curExpected = data.expectedStrs[i];
+            String curActual = data.actualStrs[i];
+            String curSuccess = data.successful[i] ? "OK" : "X ";
 
             outputBuilder.append("│ ").append(curExpected).append(" │ ").append(curActual).append(" │ ").append(curSuccess).append(" │\n");
         }
 
-        // Calculate the amount correct
-        int total = actualResults.length;
-        int correct = 0;
-        for(int i = 0; i < successful.length; ++i) {
-            boolean cur = successful[i];
-            if(cur) ++correct;
-        }
-
         outputBuilder.append("\n");
-        if(correct == total) outputBuilder.append("✓ All Correct");
-        else if(correct > (total / 2)) outputBuilder.append("Correct for more than half the tests");
+        if(data.correct == data.total) outputBuilder.append("✓ All Correct");
+        else if(data.correct > (data.total / 2)) outputBuilder.append("Correct for more than half the tests");
 
         String toPrint = outputBuilder.toString();
         // Print the output message
         System.out.println(toPrint);
-
-        // Return whether the entire answer is correct or not
-        return total == correct;
     }
 }
