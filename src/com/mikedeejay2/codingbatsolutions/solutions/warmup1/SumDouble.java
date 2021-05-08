@@ -26,7 +26,6 @@ public int sumDouble(int a, int b) {
 
 
 
-
     @Inputs
     public Object[][] inputs() {
         return new Object[][] {
