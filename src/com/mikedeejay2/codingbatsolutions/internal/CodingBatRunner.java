@@ -98,7 +98,7 @@ public final class CodingBatRunner {
         IllegalAccessException,
         InvocationTargetException {
         setupData(solution, data);
-        validateData(data);
+        validateSetup(data);
         getData(solution, data);
         processData(data);
 
@@ -242,7 +242,7 @@ public final class CodingBatRunner {
         }
     }
 
-    private void validateData(SolutionData data) {
+    private void validateSetup(SolutionData data) {
         // Input validation begin
         for(int i = 0; i < data.inputs.length; ++i) {
             Object curInput = data.inputs[i];
@@ -328,7 +328,11 @@ public final class CodingBatRunner {
 
             // Identify success or failure
             boolean success = true;
-            if(curActualResult.getClass() != curExpectedResult.getClass()) {
+            if(curActualResult == null && curExpectedResult == null) {
+                success = true;
+            } else if(curActualResult == null ^ curExpectedResult == null) {
+                success = false;
+            } else if(curActualResult.getClass() != curExpectedResult.getClass()) {
                 success = false;
             } else if(isArray.apply(curActualResult)) {
                 if(!(isArray.apply(curExpectedResult))) {
