@@ -363,7 +363,9 @@ public final class CodingBatRunner {
                     if(isArray.apply(subInput)) {
                         mBuilder.append(Arrays.deepToString((Object[]) subInput));
                     } else {
+                        if(subInput instanceof String) mBuilder.append("\"");
                         mBuilder.append(subInput.toString());
+                        if(subInput instanceof String) mBuilder.append("\"");
                     }
                     if(y != data.parameterTypes.length - 1) {
                         mBuilder.append(", ");
@@ -374,7 +376,9 @@ public final class CodingBatRunner {
             if(isArray.apply(curExpectedResult)) {
                 mBuilder.append(Arrays.deepToString((Object[]) curExpectedResult));
             } else {
+                if(curExpectedResult instanceof String) mBuilder.append("\"");
                 mBuilder.append(curExpectedResult);
+                if(curExpectedResult instanceof String) mBuilder.append("\"");
             }
 
             String expectedStr = mBuilder.toString();
@@ -382,10 +386,15 @@ public final class CodingBatRunner {
             data.expectedStrs[i] = expectedStr;
 
             // Build to actual String
-            String actualStr = curActualResult.toString();
+            StringBuilder actualStrBuilder = new StringBuilder();
             if(isArray.apply(curActualResult)) {
-                actualStr = Arrays.deepToString((Object[]) curActualResult);
+                actualStrBuilder.append(Arrays.deepToString((Object[]) curActualResult));
+            } else {
+                if(curActualResult instanceof String) actualStrBuilder.append("\"");
+                actualStrBuilder.append(curActualResult);
+                if(curActualResult instanceof String) actualStrBuilder.append("\"");
             }
+            String actualStr = actualStrBuilder.toString();
             data.actualStrs[i] = actualStr;
             data.longestActual = Math.max(data.longestActual, actualStr.length());
         }
