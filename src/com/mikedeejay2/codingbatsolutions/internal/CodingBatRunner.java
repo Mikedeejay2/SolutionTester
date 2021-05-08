@@ -101,7 +101,6 @@ public final class CodingBatRunner {
         validateData(data);
         getData(solution, data);
         processData(data);
-        postProcessData(data);
 
         // Get whether the entire answer is correct or not
         data.passed = data.total == data.correct;
@@ -406,9 +405,7 @@ public final class CodingBatRunner {
             boolean cur = data.successful[i];
             if(cur) ++data.correct;
         }
-    }
 
-    private void postProcessData(SolutionData data) {
         // Post process the expected and actual Strings for length
         for(int i = 0; i < data.actualResults.length; ++i) {
             String curExpected = data.expectedStrs[i];
