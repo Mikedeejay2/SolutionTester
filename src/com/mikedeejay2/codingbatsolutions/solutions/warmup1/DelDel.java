@@ -20,7 +20,7 @@ public class DelDel implements CodingBatSolution {
  */
 @Solution
 public String delDel(String str) {
-    return str.length() < 4 ? str : str.indexOf("del") == 1 ? str.replaceFirst("del", "") : str;
+    return str.indexOf("del") == 1 ? str.replaceFirst("del", "") : str;
 }
 
 
