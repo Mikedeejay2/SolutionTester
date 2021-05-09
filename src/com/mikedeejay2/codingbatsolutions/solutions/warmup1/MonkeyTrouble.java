@@ -20,7 +20,7 @@ public class MonkeyTrouble implements CodingBatSolution {
  */
 @Solution
 public boolean monkeyTrouble(boolean aSmile, boolean bSmile) {
-    return (aSmile && bSmile) || (!aSmile && !bSmile);
+    return aSmile && bSmile || !aSmile && !bSmile;
 }
 
 

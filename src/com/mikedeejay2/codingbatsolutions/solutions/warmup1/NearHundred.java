@@ -20,7 +20,7 @@ public class NearHundred implements CodingBatSolution {
  */
 @Solution
 public boolean nearHundred(int n) {
-    return (n >= 90 && n <= 110) || (n >= 190 && n <= 210);
+    return n >= 90 && n <= 110 || n >= 190 && n <= 210;
 }
 
 
