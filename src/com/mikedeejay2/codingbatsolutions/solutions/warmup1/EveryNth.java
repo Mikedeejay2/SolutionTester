@@ -5,8 +5,6 @@ import com.mikedeejay2.codingbatsolutions.internal.annotations.Inputs;
 import com.mikedeejay2.codingbatsolutions.internal.annotations.Results;
 import com.mikedeejay2.codingbatsolutions.internal.annotations.Solution;
 
-import java.util.stream.Collectors;
-
 public class EveryNth implements CodingBatSolution {
 
 
