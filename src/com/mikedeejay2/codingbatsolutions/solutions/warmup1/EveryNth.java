@@ -56,4 +56,13 @@ public String everyNth(String str, int n) {
             "C",
         };
     }
+
+//
+//    Same solution but using streams and regular expressions.
+//
+//    return String.join("", java.util.Arrays
+//        .stream(str.split(String.format("(?<=\\G.{%1$d})", n)))
+//        .map(s -> String.valueOf(s.charAt(0)))
+//        .collect(java.util.stream.Collectors.joining()));
+//
 }
