@@ -5,6 +5,7 @@ import com.mikedeejay2.codingbatsolutions.internal.annotations.Results;
 import com.mikedeejay2.codingbatsolutions.internal.annotations.Solution;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -34,6 +35,52 @@ public final class CodingBatRunner {
         (o.getClass() == Float.class && c == float.class) ||
         (o.getClass() == Double.class && c == double.class) ||
         (o.getClass() == Boolean.class && c == boolean.class);
+
+    private static final Function<Class<?>, Class<?>> toArray = (c) -> Array.newInstance(c, 0).getClass();
+
+    private static final Function<Class<?>, Class<?>> toPrimitive = (c) -> {
+        try
+        {
+            return (Class<?>) c.getField("TYPE").get(null);
+        }
+        catch(NoSuchFieldException | IllegalAccessException ignored) {}
+        return c;
+    };
+
+    private static final Function<Object[], Object[]> fixArr = (o) -> {
+        if(o.length == 0) return o;
+        Class<?>[] classes = new Class[o.length];
+        for(int i = 0; i < o.length; ++i) {
+            Object cur = o[i];
+            if(cur == null) {
+                classes[i] = null;
+                continue;
+            }
+            classes[i] = cur.getClass();
+        }
+        Class<?> type = null;
+        for(int i = 0; i < classes.length; ++i) {
+            Class<?> cur = classes[i];
+            if(cur == null) continue;
+            if(type == null) {
+                type = cur;
+            }
+            if(type != cur) {
+                throw new IllegalArgumentException(
+                    String.format("%s is not of type %s",
+                                  cur.getSimpleName(), type.getSimpleName()));
+            }
+        }
+        Object[] newArr = (Object[]) Array.newInstance(type, o.length);
+        System.arraycopy(o, 0, newArr, 0, o.length);
+        return newArr;
+    };
+
+    private static final BiFunction<Class<?>, Object[], Object[]> classArrCast = (c, o) -> {
+        Object newArr = Array.newInstance(c, o.length);
+        System.arraycopy(o, 0, newArr, 0, o.length);
+        return (Object[]) newArr;
+    };
 
     private static final class SolutionData {
         public Class<?> solutionClass;
@@ -240,6 +287,17 @@ public final class CodingBatRunner {
         if(data.inputs.length != data.expectedResults.length) {
             throw new IllegalArgumentException("The result of inputs method and the results of results method do not match in length for class " + data.solutionClass.getName());
         }
+
+        for(int i = 0; i < data.inputs.length; ++i) {
+            Object curInput = data.inputs[i];
+            if(!curInput.getClass().isArray()) continue;
+            Object[] curInputArr = (Object[]) curInput;
+            if(data.parameterTypes.length == 1 && data.parameterTypes[0].isArray()) {
+                if(curInputArr.length == 0) continue;
+                data.inputs[i] = classArrCast.apply(data.parameterTypes[0].getComponentType(), curInputArr);
+                continue;
+            }
+        }
     }
 
     private void validateSetup(SolutionData data) {
@@ -253,8 +311,32 @@ public final class CodingBatRunner {
                                   i, data.solutionClass.getName()));
             }
 
+            int curInputArrLength = 0;
+            Class<?> inputArrType = curInput.getClass();
+            while(inputArrType.isArray()) {
+                curInputArrLength++;
+                inputArrType = inputArrType.getComponentType();
+            }
+            int curParamArrLength = 0;
+            Class<?> paramArrType = data.parameterTypes[0];
+            while(paramArrType.isArray()) {
+                curParamArrLength++;
+                paramArrType = paramArrType.getComponentType();
+            }
+
+            if(debugMode) {
+                System.out.println("Current input array length: " + curInputArrLength);
+                System.out.println("Current parameter array length: " + curParamArrLength);
+            }
+
+            if(curInputArrLength != curParamArrLength) {
+                throw new IllegalArgumentException(
+                    String.format("The input of index %d is not the correct array length as specified by the parameter in class %s",
+                                  i, data.solutionClass.getName()));
+            }
+
             // If it's an array we need to go deeper
-            if(isArray.apply(curInput)) {
+            if(isArray.apply(curInput) && !(data.parameterTypes.length == 1 && data.parameterTypes[0].isArray())) {
                 // Get the array input cast
                 Object[] curInputArr = (Object[]) curInput;
                 // Parameter types length and input array length need to be the same size
@@ -273,14 +355,14 @@ public final class CodingBatRunner {
                             String.format("Input at index %d in sub-index %d was null for class %s",
                                           i, si, data.solutionClass.getName()));
                     }
-                    // The parameter types must be matching (ignore primitives, they don't match to objects)
+                    // The parameter types must be matching
                     if(!isInstance.apply(data.parameterTypes[si], subInput)) {
                         throw new IllegalArgumentException(
                             String.format("The input in index %d in sub-index %d %s is not assignable to the parameter type of %s in class %s",
                                           i, si, subInput, data.parameterTypes[si].getSimpleName(), data.solutionClass.getName()));
                     }
                 }
-            } else {
+            } else if(!(data.parameterTypes.length == 1 && data.parameterTypes[0].isArray())) {
                 // The parameter types must be matching
                 if(!isInstance.apply(data.parameterTypes[0], curInput)) {
                     throw new IllegalArgumentException(
@@ -300,9 +382,11 @@ public final class CodingBatRunner {
         for(int i = 0; i < data.inputs.length; ++i) {
             Object curInput = data.inputs[i];
             // Must check if it's an array because reflection is odd
-            if(isArray.apply(curInput)) {
+            if(isArray.apply(curInput) && !(data.parameterTypes.length == 1 && data.parameterTypes[0].isArray())) {
                 data.actualResults[i] = data.solutionMethod.invoke(solution, (Object[]) curInput);
             } else {
+                System.out.println("CurInput: " + curInput.getClass().getSimpleName());
+                System.out.println("ExpectedInput: " + data.parameterTypes[0].getSimpleName());
                 data.actualResults[i] = data.solutionMethod.invoke(solution, curInput);
             }
         }
