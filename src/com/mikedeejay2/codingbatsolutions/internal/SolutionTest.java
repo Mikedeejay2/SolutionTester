@@ -4,10 +4,11 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public interface CodingBatSolution {
+public interface SolutionTest
+{
     @Test
     default void testJUnit() {
-        CodingBatRunner runner = new CodingBatRunner();
+        DeprecatedSolutionTester runner = new DeprecatedSolutionTester();
         boolean success = runner.run(this);
         assertTrue(success, "Some tests failed. View above for test results.");
     }

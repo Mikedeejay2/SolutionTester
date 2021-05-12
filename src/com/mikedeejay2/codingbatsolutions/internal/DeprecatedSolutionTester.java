@@ -13,7 +13,8 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public final class CodingBatRunner {
+public final class DeprecatedSolutionTester
+{
     private static final Function<Object, Boolean> isArray = o ->
         o instanceof Object[] ||
         o instanceof byte[] ||
@@ -111,18 +112,18 @@ public final class CodingBatRunner {
 
     private final boolean debugMode;
 
-    public CodingBatRunner() {
+    public DeprecatedSolutionTester() {
         this.debugMode = false;
     }
 
-    public CodingBatRunner(boolean debugMode) {
+    public DeprecatedSolutionTester(boolean debugMode) {
         this.debugMode = debugMode;
     }
 
 
 
 
-    public boolean run(CodingBatSolution solution) {
+    public boolean run(SolutionTest solution) {
         try {
             return runInternal(solution);
         }catch(IllegalAccessException | InvocationTargetException e) {
@@ -131,7 +132,7 @@ public final class CodingBatRunner {
         return false;
     }
 
-    private boolean runInternal(CodingBatSolution solution) throws
+    private boolean runInternal(SolutionTest solution) throws
             IllegalAccessException,
             InvocationTargetException {
         // Create a new SolutionData structure
@@ -141,7 +142,7 @@ public final class CodingBatRunner {
         return data.passed;
     }
 
-    private void generateData(CodingBatSolution solution, SolutionData data) throws
+    private void generateData(SolutionTest solution, SolutionData data) throws
         IllegalAccessException,
         InvocationTargetException {
         setupData(solution, data);
@@ -153,7 +154,7 @@ public final class CodingBatRunner {
         data.passed = data.total == data.correct;
     }
 
-    private void setupData(CodingBatSolution solution, SolutionData data) throws
+    private void setupData(SolutionTest solution, SolutionData data) throws
         IllegalAccessException,
         InvocationTargetException {
         // Get the solution's class
@@ -374,7 +375,7 @@ public final class CodingBatRunner {
         // Input validation end
     }
 
-    private void getData(CodingBatSolution solution, SolutionData data) throws
+    private void getData(SolutionTest solution, SolutionData data) throws
         IllegalAccessException,
         InvocationTargetException {
         // Get the actual results

@@ -1,11 +1,12 @@
 package com.mikedeejay2.codingbatsolutions.solutions.warmup1;
 
-import com.mikedeejay2.codingbatsolutions.internal.CodingBatSolution;
+import com.mikedeejay2.codingbatsolutions.internal.SolutionTest;
 import com.mikedeejay2.codingbatsolutions.internal.annotations.Inputs;
 import com.mikedeejay2.codingbatsolutions.internal.annotations.Results;
 import com.mikedeejay2.codingbatsolutions.internal.annotations.Solution;
 
-public class Makes10 implements CodingBatSolution {
+public class Makes10 implements SolutionTest
+{
 
 
 
