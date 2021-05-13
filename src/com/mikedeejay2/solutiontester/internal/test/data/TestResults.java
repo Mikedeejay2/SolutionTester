@@ -1,5 +1,9 @@
 package com.mikedeejay2.solutiontester.internal.test.data;
 
 public class TestResults {
-    protected boolean success;
+    public final boolean success;
+
+    public TestResults(boolean success) {
+        this.success = success;
+    }
 }

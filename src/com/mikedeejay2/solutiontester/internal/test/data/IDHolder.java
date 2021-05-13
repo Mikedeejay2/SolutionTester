@@ -3,7 +3,7 @@ package com.mikedeejay2.solutiontester.internal.test.data;
 import java.util.*;
 
 public class IDHolder {
-    private String id;
+    private final String id;
     private List<AnnotatedMethod> resultsMethods;
     private List<AnnotatedMethod> inputsMethods;
     private List<AnnotatedMethod> solutionMethods;
@@ -53,10 +53,6 @@ public class IDHolder {
 
     public String getId() {
         return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public List<AnnotatedMethod> getResultsMethods() {

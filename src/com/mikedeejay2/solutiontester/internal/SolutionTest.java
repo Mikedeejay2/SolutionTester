@@ -13,7 +13,7 @@ public interface SolutionTest
     default void testJUnit() {
         SolutionTester tester = new SolutionTester();
         TestResults results = tester.apply(this);
-        assertTrue(false, "Some tests failed. View above for test results.");
+        assertTrue(results.success, "Some tests failed. View above for test results.");
     }
 
     default SolutionTestSolver _toSolver() {

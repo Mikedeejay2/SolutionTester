@@ -36,12 +36,13 @@ public class SolutionTestSolver implements Supplier<TestResults> {
         collectAnnotatedMethods();
         collectIDs();
 
-        return null;
+        return new TestResults(true);
     }
 
-    private void validateID(String id)
-    {
-        if(!ids.containsKey(id)) ids.put(id, new IDHolder(id));
+    private void validateID(String id) {
+        if(!ids.containsKey(id)) {
+            ids.put(id, new IDHolder(id));
+        }
     }
 
     private void collectSolutionClass() {
