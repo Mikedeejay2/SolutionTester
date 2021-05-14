@@ -88,7 +88,7 @@ public class SolutionTestSolver implements Supplier<TestResults> {
                     }
                 }
                 if(all) {
-                    ids.values().forEach((holder) -> holder.addSolutionMethods(method));
+                    ids.values().forEach((holder) -> holder.addSolutionMethod(method));
                 } else {
                     for(String id : idArr) {
                         validateID(id);

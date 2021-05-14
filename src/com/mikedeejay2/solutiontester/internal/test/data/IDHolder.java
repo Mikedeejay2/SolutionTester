@@ -20,34 +20,13 @@ public class IDHolder {
         return this;
     }
 
-    public IDHolder addInputsMethods(AnnotatedMethod... methods) {
-        for(AnnotatedMethod method : methods) {
-            addInputsMethod(method);
-        }
-        return this;
-    }
-
     public IDHolder addResultsMethod(AnnotatedMethod method) {
         this.resultsMethods.add(method);
         return this;
     }
 
-    public IDHolder addResultsMethods(AnnotatedMethod... methods) {
-        for(AnnotatedMethod method : methods) {
-            addResultsMethod(method);
-        }
-        return this;
-    }
-
     public IDHolder addSolutionMethod(AnnotatedMethod method) {
         this.solutionMethods.add(method);
-        return this;
-    }
-
-    public IDHolder addSolutionMethods(AnnotatedMethod... methods) {
-        for(AnnotatedMethod method : methods) {
-            addSolutionMethod(method);
-        }
         return this;
     }
 
