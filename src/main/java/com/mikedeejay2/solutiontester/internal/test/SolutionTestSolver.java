@@ -4,14 +4,12 @@ import com.mikedeejay2.solutiontester.internal.SolutionTest;
 import com.mikedeejay2.solutiontester.internal.test.data.AnnotatedMethod;
 import com.mikedeejay2.solutiontester.internal.test.data.IDHolder;
 import com.mikedeejay2.solutiontester.internal.test.data.TestResults;
+import com.mikedeejay2.solutiontester.internal.util.SolveUtils;
 import com.sun.istack.internal.NotNull;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Supplier;
 
 public class SolutionTestSolver implements Supplier<TestResults> {
@@ -53,6 +51,7 @@ public class SolutionTestSolver implements Supplier<TestResults> {
         collectResults();
         // VALIDATION STAGE 2
         validateInputsLength();
+        validateReturnTypes();
 
         return new TestResults(true);
     }
@@ -192,6 +191,7 @@ public class SolutionTestSolver implements Supplier<TestResults> {
         for(IDHolder holder : ids.values()) {
             Object[] results = holder.getResults().get(0);
             List<Object[][]> inputs = holder.getInputs();
+            int previousLength = -1;
             for(Object[][] input2d : inputs) {
                 if(input2d.length != results.length) {
                     throw new IllegalArgumentException(String.format(
@@ -200,7 +200,40 @@ public class SolutionTestSolver implements Supplier<TestResults> {
                                                                     ));
                 }
                 for(Object[] input1d : input2d) {
-                    // TODO: Put validation that the length of each parameter is correct
+                    if(previousLength == -1) previousLength = input1d.length;
+                    if(input1d.length != previousLength) {
+                        throw new IllegalArgumentException(String.format(
+                            "The ID \"%s\" has a set of inputs that does not set the size of the results in class \"%s\"",
+                            holder.getId(), solutionClass.getName()
+                                                                        ));
+                    }
+                }
+            }
+        }
+    }
+
+    private void validateReturnTypes() {
+        for(IDHolder holder : ids.values()) {
+            Object[] results = holder.getResults().get(0);
+            Class<?> solutionReturnType = null;
+            for(AnnotatedMethod method : holder.getSolutionMethods()) {
+                if(solutionReturnType == null) solutionReturnType = method.getMethod().getReturnType();
+                if(solutionReturnType != method.getMethod().getReturnType()) {
+                    throw new IllegalArgumentException(String.format(
+                        "The ID \"%s\" has mismatched solution return types in class \"%s\"",
+                        holder.getId(), solutionClass.getName()
+                                                                    ));
+                }
+                for(Object result : results) {
+                    Class<?> resultClass = result.getClass();
+                    if(solutionReturnType.isArray() && resultClass.isArray()) {
+                        continue;
+                    } else if(solutionReturnType.isArray() || resultClass.isArray()) {
+                        throw new IllegalArgumentException(String.format(
+                            "The ID \"%s\" has mismatched solution and result array return types in class \"%s\"",
+                            holder.getId(), solutionClass.getName()
+                                                                        ));
+                    }
                 }
             }
         }
