@@ -4,6 +4,7 @@ import com.mikedeejay2.solutiontester.internal.SolutionTest;
 import com.mikedeejay2.solutiontester.internal.test.data.AnnotatedMethod;
 import com.mikedeejay2.solutiontester.internal.test.data.IDHolder;
 import com.mikedeejay2.solutiontester.internal.test.data.TestResults;
+import com.sun.istack.internal.NotNull;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ public class SolutionTestSolver implements Supplier<TestResults> {
     private List<AnnotatedMethod> annotatedMethods;
     private Map<String, IDHolder> ids;
 
-    public SolutionTestSolver(SolutionTest test) {
+    public SolutionTestSolver(@NotNull SolutionTest test) {
         this.test = test;
         this.solutionClass = null;
         this.allMethods = null;

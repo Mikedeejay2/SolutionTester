@@ -3,6 +3,7 @@ package com.mikedeejay2.solutiontester.internal.test.data;
 import com.mikedeejay2.solutiontester.internal.annotations.Inputs;
 import com.mikedeejay2.solutiontester.internal.annotations.Results;
 import com.mikedeejay2.solutiontester.internal.annotations.Solution;
+import com.sun.istack.internal.NotNull;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -21,7 +22,7 @@ public class AnnotatedMethod {
     private String[] solutionIDs;
     private boolean isFilled;
 
-    public AnnotatedMethod(Method method) {
+    public AnnotatedMethod(@NotNull Method method) {
         this.method = method;
         this.isInputs = false;
         this.isResults = false;
