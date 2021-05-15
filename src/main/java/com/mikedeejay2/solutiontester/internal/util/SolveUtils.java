@@ -2,8 +2,11 @@ package com.mikedeejay2.solutiontester.internal.util;
 
 import java.lang.reflect.Array;
 
-public final class SolveUtils
-{
+public final class SolveUtils {
+    private SolveUtils() {
+        throw new UnsupportedOperationException("This class should not be initialized.");
+    }
+
     public static boolean isArray(Object obj) {
         return obj instanceof Object[] ||
             obj instanceof byte[] ||
