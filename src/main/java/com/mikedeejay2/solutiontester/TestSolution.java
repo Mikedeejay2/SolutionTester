@@ -7,6 +7,11 @@ import com.mikedeejay2.solutiontester.internal.annotations.Solution;
 
 public class TestSolution implements SolutionTest
 {
+    @Solution
+    public String[] combineStrNumGlobal(String str, int[][] num) {
+        return new String[]{str + num[0][0]};
+    }
+
     @Solution(ids = "test")
     public String[] combineStrNum(String str, int[][] num) {
         return new String[]{str + num[0][0]};

@@ -386,58 +386,76 @@ public class SolutionTestSolver implements Supplier<TestResults> {
     }
 
     private TestResults toTestResults() {
-        boolean success;
-        int total = 0;
-        int passed = 0;
-        int failed = 0;
+        boolean globalSuccess;
+        int globalTotal = 0;
+        int globalPassed = 0;
+        int globalFailed = 0;
         final List<String> idsList = new ArrayList<>(ids.keySet());
-        final Map<String, List<Object[][]>> inputs = new LinkedHashMap<>();
-        final Map<String, Object[]> results = new LinkedHashMap<>();
-        final Map<String, List<Object>> solutions = new LinkedHashMap<>();
-        final Map<String, List<String>> methodNames = new LinkedHashMap<>();
-        final Map<String, List<Boolean>> hasPassed = new LinkedHashMap<>();
+        final Map<String, TestResults.TestResult> testResults = new HashMap<>();
 
         for(IDHolder holder : ids.values()) {
-            extractInputs(inputs, holder);
-            extractResults(results, holder);
-            extractSolutions(solutions, holder);
-            addIDIfNotPresent(methodNames, holder);
-            extractMethodNames(methodNames, holder);
-            addIDIfNotPresent(hasPassed, holder);
-            processHasPassed(hasPassed, holder);
-        }
+            boolean localSuccess;
+            int localTotal = 0;
+            int localPassed = 0;
+            int localFailed = 0;
+            String id = holder.getId();
+            List<Object[][]> inputs = holder.getInputs();
+            Object[] results = holder.getResults().get(0);
+            List<Object> solutions = holder.getSolutions();
+            List<String> methodNames = new ArrayList<>();
+            List<Boolean> hasPassed = new ArrayList<>();
 
-        for(List<Boolean> booleanList : hasPassed.values()) {
-            for(Boolean curPassed : booleanList) {
-                ++total;
-                if(curPassed) ++passed;
-                else ++failed;
+            extractMethodNames(methodNames, holder);
+            processHasPassed(hasPassed, holder);
+
+            for(Boolean curPassed : hasPassed) {
+                ++localTotal;
+                if(curPassed) ++localPassed;
+                else ++localFailed;
             }
+            localSuccess = localTotal == localPassed;
+            globalTotal += localTotal;
+            globalPassed += localPassed;
+            globalFailed += localFailed;
+
+            testResults.put(id, new TestResults.TestResult(
+                localSuccess,
+                localTotal,
+                localPassed,
+                localFailed,
+                id,
+                inputs,
+                results,
+                solutions,
+                methodNames,
+                hasPassed
+            ));
         }
-        success = passed == total;
-        return new TestResults(success, total, passed, failed, idsList, inputs, results, solutions, methodNames, hasPassed);
+        globalSuccess = globalPassed == globalTotal;
+        return new TestResults(
+            globalSuccess,
+            globalTotal,
+            globalPassed,
+            globalFailed,
+            idsList,
+            testResults
+        );
     }
 
-    private void processHasPassed(Map<String, List<Boolean>> hasPassed, IDHolder holder) {
+    private void processHasPassed(List<Boolean> hasPassed, IDHolder holder) {
         Object[] curResults = holder.getResults().get(0);
         List<Object> curSolutions = holder.getSolutions();
         for(int i = 0; i < curSolutions.size(); ++i) {
             Object curResult = curResults[i % curResults.length];
             Object curSolution = curSolutions.get(i);
             boolean curPassed = SolveUtils.eEquals(curResult, curSolution);
-            hasPassed.get(holder.getId()).add(curPassed);
+            hasPassed.add(curPassed);
         }
     }
 
-    private void extractMethodNames(Map<String, List<String>> methodNames, IDHolder holder) {
+    private void extractMethodNames(List<String> methodNames, IDHolder holder) {
         for(AnnotatedMethod solutionMethod : holder.getSolutionMethods()) {
-            methodNames.get(holder.getId()).add(solutionMethod.getMethod().getName());
-        }
-    }
-
-    private <T> void addIDIfNotPresent(Map<String, List<T>> methodNames, IDHolder holder) {
-        if(!methodNames.containsKey(holder.getId())) {
-            methodNames.put(holder.getId(), new ArrayList<>());
+            methodNames.add(solutionMethod.getMethod().getName());
         }
     }
 
@@ -449,8 +467,8 @@ public class SolutionTestSolver implements Supplier<TestResults> {
         results.put(holder.getId(), holder.getResults().get(0));
     }
 
-    private void extractInputs(Map<String, List<Object[][]>> inputs, IDHolder holder) {
-        inputs.put(holder.getId(), holder.getInputs());
+    private void extractInputs(List<Object[][]> inputs, IDHolder holder) {
+        inputs.addAll(holder.getInputs());
     }
 
     private void addIDIfNotPresent(AnnotatedMethod method, List<String> idList, SolverInputType type) {
