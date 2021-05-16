@@ -53,6 +53,7 @@ public class SolutionTestSolver implements Supplier<TestResults> {
         // VALIDATION STAGE 2
         validateInputsLength();
         validateReturnTypes();
+        validateParameterTypes();
 
         return new TestResults(true);
     }
@@ -269,17 +270,82 @@ public class SolutionTestSolver implements Supplier<TestResults> {
                                                                     ));
                 }
                 for(Object result : results) {
+                    if(result == null) {
+                        if(solutionReturnType.isPrimitive()) {
+                            throw new IllegalArgumentException(String.format(
+                                "The ID \"%s\" has a result with an invalid null parameter type in class \"%s\"",
+                                holder.getId(), solutionClass.getName()
+                                                                            ));
+                        }
+                        continue;
+                    }
                     Class<?> resultClass = result.getClass();
                     if(solutionReturnType.isArray() != resultClass.isArray()) {
                         throw new IllegalArgumentException(String.format(
                             "The ID \"%s\" has mismatched solution and result array return types in class \"%s\"",
                             holder.getId(), solutionClass.getName()
                                                                         ));
-                    } else if(!SolveUtils.isInstance(solutionReturnType, result)) {
+                    } else if(!SolveUtils.isInstance(solutionReturnType, resultClass)) {
                         throw new IllegalArgumentException(String.format(
                             "The ID \"%s\" has a result type that does not match the return type in class \"%s\"",
                             holder.getId(), solutionClass.getName()
                                                                         ));
+                    }
+                }
+            }
+        }
+    }
+
+    private void validateParameterTypes() {
+        for(IDHolder holder : ids.values()) {
+            Class<?>[] solutionParameterTypes = null;
+            for(AnnotatedMethod solutionAnnoMethod : holder.getSolutionMethods()) {
+                Method solutionMethod = solutionAnnoMethod.getMethod();
+                Class<?>[] curParameterTypes = solutionMethod.getParameterTypes();
+                if(solutionParameterTypes == null) solutionParameterTypes = curParameterTypes;
+                if(curParameterTypes.length != solutionParameterTypes.length) {
+                    throw new IllegalArgumentException(String.format(
+                        "The ID \"%s\" has solutions with different parameter lengths in class \"%s\"",
+                        holder.getId(), solutionClass.getName()
+                                                                    ));
+                }
+                for(int i = 0; i < solutionParameterTypes.length; ++i) {
+                    Class<?> solutionParamType = solutionParameterTypes[i];
+                    Class<?> curParamType = curParameterTypes[i];
+                    if(solutionParamType != curParamType) {
+                        throw new IllegalArgumentException(String.format(
+                            "The ID \"%s\" has mismatched parameter types for solutions in class \"%s\"",
+                            holder.getId(), solutionClass.getName()
+                                                                        ));
+                    }
+                }
+            }
+            for(Object[][] input2D : holder.getInputs()) {
+                for(Object[] input1D : input2D) {
+                    if(input1D.length != solutionParameterTypes.length) {
+                        throw new IllegalArgumentException(String.format(
+                            "The ID \"%s\" has an input with invalid parameter length in class \"%s\"",
+                            holder.getId(), solutionClass.getName()
+                                                                        ));
+                    }
+                    for(int i = 0; i < input1D.length; ++i) {
+                        Class<?> expectedType = solutionParameterTypes[i];
+                        Object input = input1D[i];
+                        if(input == null) {
+                            if(expectedType.isPrimitive()) {
+                                throw new IllegalArgumentException(String.format(
+                                    "The ID \"%s\" has an input with invalid null parameter type in class \"%s\"",
+                                    holder.getId(), solutionClass.getName()
+                                                                                ));
+                            }
+                            continue;
+                        }
+                        if(!SolveUtils.isInstance(expectedType, input.getClass())) {
+                            throw new IllegalArgumentException(String.format(
+                                "The ID \"%s\" has an input with invalid parameter types in class \"%s\"",
+                                holder.getId(), solutionClass.getName()
+                                                                            ));
+                        }
                     }
                 }
             }

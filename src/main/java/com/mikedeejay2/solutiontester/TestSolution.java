@@ -8,16 +8,16 @@ import com.mikedeejay2.solutiontester.internal.annotations.Solution;
 public class TestSolution implements SolutionTest
 {
     @Solution
-    public String[] combineStrNum(String str, int[] num) {
-        return new String[]{str + num[0]};
+    public String[] combineStrNum(String str, int[][] num) {
+        return new String[]{str + num[0][0]};
     }
 
     @Inputs
     public Object[][] inputs() {
         return new Object[][] {
-                {"hi!", new Integer[]{2}},
-                {"bye!", new Integer[]{4}},
-                {"How are you?", new Integer[]{1337}}
+                {"hi!", new Integer[][]{{2}}},
+                {"bye!", new Integer[][]{{4}}},
+                {"How are you?", new Integer[][]{{1337}}}
         };
     }
 
