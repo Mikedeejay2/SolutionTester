@@ -7,6 +7,6 @@ import java.util.function.Consumer;
 public class SolutionPrinter implements Consumer<TestResults> {
     @Override
     public void accept(TestResults testResults) {
-
+        System.out.println("TestResults: " + testResults);
     }
 }

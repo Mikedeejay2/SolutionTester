@@ -1,5 +1,6 @@
 package com.mikedeejay2.solutiontester.internal.test.data;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -46,6 +47,23 @@ public class TestResults {
             this.methodNames = methodNames;
             this.hasPassed = hasPassed;
         }
+
+        @Override
+        public String toString()
+        {
+            return "TestResult{" +
+                "\nsuccess=" + success +
+                ", \ntotal=" + total +
+                ", \npassed=" + passed +
+                ", \nfailed=" + failed +
+                ", \nid='" + id + '\'' +
+                ", \ninputs=" + inputs +
+                ", \nresults=" + Arrays.toString(results) +
+                ", \nsolutions=" + solutions +
+                ", \nmethodNames=" + methodNames +
+                ", \nhasPassed=" + hasPassed +
+                '}';
+        }
     }
 
     public TestResults(
@@ -85,5 +103,18 @@ public class TestResults {
 
     public Map<String, TestResult> getResults() {
         return results;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "TestResults{" +
+            "\nsuccess=" + success +
+            ", \ntotal=" + total +
+            ", \npassed=" + passed +
+            ", \nfailed=" + failed +
+            ", \nids=" + ids +
+            ", \nresults=" + results +
+            '}';
     }
 }
