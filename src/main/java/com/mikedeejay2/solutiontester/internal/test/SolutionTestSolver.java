@@ -46,6 +46,7 @@ public class SolutionTestSolver implements Supplier<TestResults> {
         validateAnnotations();
         validateMethods();
         validateSingleResults();
+        validateNoMissing();
         // COLLECTION STAGE 2
         collectInputs();
         collectResults();
@@ -80,6 +81,8 @@ public class SolutionTestSolver implements Supplier<TestResults> {
                 List<String> idList = method.getResultsIDs();
                 addIDIfNotPresent(method, idList, SolverInputType.RESULTS);
             }
+        }
+        for(AnnotatedMethod method : annotatedMethods) {
             if(method.isSolution()) {
                 List<String[]> idList = method.getSolutionIDs();
                 boolean all = false;
@@ -169,6 +172,35 @@ public class SolutionTestSolver implements Supplier<TestResults> {
         }
     }
 
+    private void validateNoMissing(){
+        if(ids.isEmpty()) {
+            throw new IllegalArgumentException(String.format(
+                "No IDs exist in class \"%s\"",
+                solutionClass.getName()
+                                                            ));
+        }
+        for(IDHolder holder : ids.values()) {
+            if(holder.getInputsMethods().isEmpty()) {
+                throw new IllegalArgumentException(String.format(
+                    "The ID \"%s\" has no input methods in class \"%s\"",
+                    holder.getId(), solutionClass.getName()
+                                                                ));
+            }
+            if(holder.getResultsMethods().isEmpty()) {
+                throw new IllegalArgumentException(String.format(
+                    "The ID \"%s\" has no result methods in class \"%s\"",
+                    holder.getId(), solutionClass.getName()
+                                                                ));
+            }
+            if(holder.getSolutionMethods().isEmpty()) {
+                throw new IllegalArgumentException(String.format(
+                    "The ID \"%s\" has no solution methods in class \"%s\"",
+                    holder.getId(), solutionClass.getName()
+                                                                ));
+            }
+        }
+    }
+
     private void collectInputs() throws InvocationTargetException, IllegalAccessException {
         for(IDHolder holder : ids.values()) {
             for(AnnotatedMethod annotatedMethod : holder.getInputsMethods()) {
@@ -193,6 +225,12 @@ public class SolutionTestSolver implements Supplier<TestResults> {
             List<Object[][]> inputs = holder.getInputs();
             int previousLength = -1;
             for(Object[][] input2d : inputs) {
+                if(input2d == null) {
+                    throw new IllegalArgumentException(String.format(
+                        "The ID \"%s\" has an input that returned null in class \"%s\"",
+                        holder.getId(), solutionClass.getName()
+                                                                    ));
+                }
                 if(input2d.length != results.length) {
                     throw new IllegalArgumentException(String.format(
                         "The ID \"%s\" has a set of inputs that does not set the size of the results in class \"%s\"",
@@ -200,6 +238,12 @@ public class SolutionTestSolver implements Supplier<TestResults> {
                                                                     ));
                 }
                 for(Object[] input1d : input2d) {
+                    if(input1d == null) {
+                        throw new IllegalArgumentException(String.format(
+                            "The ID \"%s\" has a sub-input that returned null in class \"%s\"",
+                            holder.getId(), solutionClass.getName()
+                                                                        ));
+                    }
                     if(previousLength == -1) previousLength = input1d.length;
                     if(input1d.length != previousLength) {
                         throw new IllegalArgumentException(String.format(
@@ -226,11 +270,14 @@ public class SolutionTestSolver implements Supplier<TestResults> {
                 }
                 for(Object result : results) {
                     Class<?> resultClass = result.getClass();
-                    if(solutionReturnType.isArray() && resultClass.isArray()) {
-                        continue;
-                    } else if(solutionReturnType.isArray() || resultClass.isArray()) {
+                    if(solutionReturnType.isArray() != resultClass.isArray()) {
                         throw new IllegalArgumentException(String.format(
                             "The ID \"%s\" has mismatched solution and result array return types in class \"%s\"",
+                            holder.getId(), solutionClass.getName()
+                                                                        ));
+                    } else if(!SolveUtils.isInstance(solutionReturnType, result)) {
+                        throw new IllegalArgumentException(String.format(
+                            "The ID \"%s\" has a result type that does not match the return type in class \"%s\"",
                             holder.getId(), solutionClass.getName()
                                                                         ));
                     }

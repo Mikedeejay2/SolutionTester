@@ -8,25 +8,25 @@ import com.mikedeejay2.solutiontester.internal.annotations.Solution;
 public class TestSolution implements SolutionTest
 {
     @Solution
-    public String combineStrNum(String str, int num) {
-        return str + num;
+    public String[] combineStrNum(String str, int[] num) {
+        return new String[]{str + num[0]};
     }
 
     @Inputs
     public Object[][] inputs() {
         return new Object[][] {
-                {"hi!", 2},
-                {"bye!", 4},
-                {"How are you?", 1337}
+                {"hi!", new Integer[]{2}},
+                {"bye!", new Integer[]{4}},
+                {"How are you?", new Integer[]{1337}}
         };
     }
 
     @Results
     public Object[] results() {
         return new Object[] {
-                "hi!2",
-                "bye!4",
-                "How are you?1337"
+                new String[]{"hi!2"},
+                new String[]{"bye!4"},
+                new String[]{"How are you?1337"}
         };
     }
 }

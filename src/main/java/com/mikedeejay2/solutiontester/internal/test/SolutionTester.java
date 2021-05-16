@@ -6,10 +6,9 @@ import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
 
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.function.Function;
 
-public class SolutionTester implements Function<SolutionTest, TestResults> {
+public class SolutionTester implements Function<SolutionTest, CompletableFuture<TestResults>> {
     protected SolutionPrinter printer;
 
     public SolutionTester() {
@@ -20,17 +19,15 @@ public class SolutionTester implements Function<SolutionTest, TestResults> {
         this.printer = printer;
     }
 
-    private TestResults solve(@NotNull final SolutionTest solutionTest) throws
-        ExecutionException, InterruptedException {
+    private CompletableFuture<TestResults> solve(@NotNull final SolutionTest solutionTest) {
         final CompletableFuture<TestResults> testFuture = CompletableFuture.supplyAsync(solutionTest._toSolver());
-        final CompletableFuture<?> printFuture = printer == null ? testFuture : testFuture.thenAccept(printer);
+        testFuture.thenAccept(printer);
 
-        printFuture.get();
-        return testFuture.getNow(null);
+        return testFuture;
     }
 
     @Override
-    public TestResults apply(@NotNull final SolutionTest solutionTest) {
+    public CompletableFuture<TestResults> apply(@NotNull final SolutionTest solutionTest) {
         try {
             return solve(solutionTest);
         } catch(Exception e) {
