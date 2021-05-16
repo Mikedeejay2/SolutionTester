@@ -1,6 +1,7 @@
 package com.mikedeejay2.solutiontester.internal.util;
 
 import java.lang.reflect.Array;
+import java.util.Arrays;
 
 public final class SolveUtils {
     private SolveUtils() {
@@ -36,7 +37,7 @@ public final class SolveUtils {
         Class<?> rootComponent1 = getRootComponent(clazz1);
         Class<?> rootComponent2 = getRootComponent(clazz2);
         if(getArrayDepth(clazz1) != getArrayDepth(clazz2)) return false;
-        return isInstance(rootComponent1, rootComponent2);
+        return rootComponent1 == rootComponent2;
     }
 
     public static Class<?> toClassArray(Class<?> clazz) {
@@ -100,5 +101,18 @@ public final class SolveUtils {
             curClass = curClass.getComponentType();
         }
         return count;
+    }
+
+    public static boolean eEquals(Object obj1, Object obj2) {
+        if(obj1 == null && obj2 == null) return true;
+        if(obj1 == null ^ obj2 == null) return false;
+        final Class<?> obj1Class = obj1.getClass();
+        final Class<?> obj2Class = obj2.getClass();
+        if(obj1Class.isArray() && obj2Class.isArray()) {
+            return Arrays.deepEquals((Object[]) obj1, (Object[]) obj2);
+        } else if(obj1Class.isArray() || obj2Class.isArray()) {
+            return false;
+        }
+        return obj1.equals(obj2);
     }
 }

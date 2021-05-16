@@ -24,7 +24,7 @@ public class SolutionTestSolver implements Supplier<TestResults> {
         this.test = test;
         this.solutionClass = null;
         this.annotatedMethods = new ArrayList<>();
-        this.ids = new HashMap<>();
+        this.ids = new LinkedHashMap<>();
     }
 
     @Override
@@ -43,19 +43,27 @@ public class SolutionTestSolver implements Supplier<TestResults> {
         collectAnnotatedMethods();
         collectIDs();
         // VALIDATION STAGE 1
-        validateAnnotations();
-        validateMethods();
-        validateSingleResults();
-        validateNoMissing();
-        // COLLECTION STAGE 2
-        collectInputs();
-        collectResults();
-        // VALIDATION STAGE 2
-        validateInputsLength();
-        validateReturnTypes();
-        validateParameterTypes();
+        for(AnnotatedMethod method : annotatedMethods) {
+            validateAnnotations(method);
+            validateMethods(method);
+        }
+        validateIDsFilled();
 
-        return new TestResults(true);
+        for(IDHolder holder : ids.values()) {
+            validateSingleResults(holder);
+            validateNoMissing(holder);
+            // COLLECTION STAGE 2
+            collectInputs(holder);
+            collectResults(holder);
+            // VALIDATION STAGE 2
+            validateInputsLength(holder);
+            validateReturnTypes(holder);
+            validateParameterTypes(holder);
+            // COLLECTION STAGE 3
+            collectSolutions(holder);
+        }
+
+        return toTestResults();
     }
 
     private void collectSolutionClass() {
@@ -109,185 +117,226 @@ public class SolutionTestSolver implements Supplier<TestResults> {
         }
     }
 
-    private void validateAnnotations() {
-        for(AnnotatedMethod method : annotatedMethods) {
-            int test = 0;
-            if(method.isInputs()) ++test;
-            if(method.isResults()) ++test;
-            if(method.isSolution()) ++test;
-            if(test > 1) {
-                throw new IllegalArgumentException(String.format(
-                    "The method \"%s\" has too many type annotations in class \"%s\"",
-                    method.getMethod().getName(), solutionClass.getName()
-                                                                ));
-            }
+    private void validateAnnotations(AnnotatedMethod method) {
+        int test = 0;
+        if(method.isInputs()) ++test;
+        if(method.isResults()) ++test;
+        if(method.isSolution()) ++test;
+        if(test > 1) {
+            throw new IllegalArgumentException(String.format(
+                "The method \"%s\" has too many type annotations in class \"%s\"",
+                method.getMethod().getName(), solutionClass.getName()
+                                                            ));
         }
     }
 
-    private void validateMethods() {
-        for(AnnotatedMethod annotatedMethod : annotatedMethods) {
-            Method method = annotatedMethod.getMethod();
-            Class<?> returnType = method.getReturnType();
-            Class<?>[] parameterTypes = method.getParameterTypes();
-            switch(annotatedMethod.getType()) {
-                case INPUTS:
-                    if(parameterTypes.length > 0) {
-                        throw new IllegalArgumentException(String.format(
-                            "The input method \"%s\" can not take parameters in class \"%s\"",
-                            annotatedMethod.getMethod().getName(), solutionClass.getName()
-                                                                        ));
-                    }
-                    if(!(returnType.isArray() && returnType.getComponentType().isArray())) {
-                        throw new IllegalArgumentException(String.format(
-                            "The input method \"%s\" does not have the correct return type in class \"%s\"",
-                            annotatedMethod.getMethod().getName(), solutionClass.getName()
-                                                                        ));
-                    }
-                    break;
-                case RESULTS:
-                    if(parameterTypes.length > 0) {
-                        throw new IllegalArgumentException(String.format(
-                            "The result method \"%s\" can not take parameters in class \"%s\"",
-                            annotatedMethod.getMethod().getName(), solutionClass.getName()
-                                                                        ));
-                    }
-                    if(!returnType.isArray()) {
-                        throw new IllegalArgumentException(String.format(
-                            "The input method \"%s\" does not have the correct return type in class \"%s\"",
-                            annotatedMethod.getMethod().getName(), solutionClass.getName()
-                                                                        ));
-                    }
-                    break;
-            }
+    private void validateMethods(AnnotatedMethod annotatedMethod) {
+        Method method = annotatedMethod.getMethod();
+        Class<?> returnType = method.getReturnType();
+        Class<?>[] parameterTypes = method.getParameterTypes();
+        switch(annotatedMethod.getType()) {
+            case INPUTS:
+                if(parameterTypes.length > 0) {
+                    throw new IllegalArgumentException(String.format(
+                        "The input method \"%s\" can not take parameters in class \"%s\"",
+                        annotatedMethod.getMethod().getName(), solutionClass.getName()
+                                                                    ));
+                }
+                if(!(returnType.isArray() && returnType.getComponentType().isArray())) {
+                    throw new IllegalArgumentException(String.format(
+                        "The input method \"%s\" does not have the correct return type in class \"%s\"",
+                        annotatedMethod.getMethod().getName(), solutionClass.getName()
+                                                                    ));
+                }
+                break;
+            case RESULTS:
+                if(parameterTypes.length > 0) {
+                    throw new IllegalArgumentException(String.format(
+                        "The result method \"%s\" can not take parameters in class \"%s\"",
+                        annotatedMethod.getMethod().getName(), solutionClass.getName()
+                                                                    ));
+                }
+                if(!returnType.isArray()) {
+                    throw new IllegalArgumentException(String.format(
+                        "The input method \"%s\" does not have the correct return type in class \"%s\"",
+                        annotatedMethod.getMethod().getName(), solutionClass.getName()
+                                                                    ));
+                }
+                break;
         }
     }
 
-    private void validateSingleResults() {
-        for(IDHolder holder : ids.values()) {
-            if(holder.getResults().size() > 1) {
-                throw new IllegalArgumentException(String.format(
-                    "The ID \"%s\" has multiple results methods in class \"%s\"",
-                    holder.getId(), solutionClass.getName()
-                                                                ));
-            }
-        }
-    }
-
-    private void validateNoMissing(){
+    private void validateIDsFilled() {
         if(ids.isEmpty()) {
             throw new IllegalArgumentException(String.format(
                 "No IDs exist in class \"%s\"",
                 solutionClass.getName()
                                                             ));
         }
-        for(IDHolder holder : ids.values()) {
-            if(holder.getInputsMethods().isEmpty()) {
-                throw new IllegalArgumentException(String.format(
-                    "The ID \"%s\" has no input methods in class \"%s\"",
-                    holder.getId(), solutionClass.getName()
-                                                                ));
-            }
-            if(holder.getResultsMethods().isEmpty()) {
-                throw new IllegalArgumentException(String.format(
-                    "The ID \"%s\" has no result methods in class \"%s\"",
-                    holder.getId(), solutionClass.getName()
-                                                                ));
-            }
-            if(holder.getSolutionMethods().isEmpty()) {
-                throw new IllegalArgumentException(String.format(
-                    "The ID \"%s\" has no solution methods in class \"%s\"",
-                    holder.getId(), solutionClass.getName()
-                                                                ));
-            }
+    }
+
+    private void validateSingleResults(IDHolder holder) {
+        if(holder.getResults().size() > 1) {
+            throw new IllegalArgumentException(String.format(
+                "The ID \"%s\" has multiple results methods in class \"%s\"",
+                holder.getId(), solutionClass.getName()
+                                                            ));
         }
     }
 
-    private void collectInputs() throws InvocationTargetException, IllegalAccessException {
-        for(IDHolder holder : ids.values()) {
-            for(AnnotatedMethod annotatedMethod : holder.getInputsMethods()) {
-                Object[][] result = (Object[][]) annotatedMethod.getMethod().invoke(test);
-                holder.addInputs(result);
-            }
+    private void validateNoMissing(IDHolder holder){
+        if(holder.getInputsMethods().isEmpty()) {
+            throw new IllegalArgumentException(String.format(
+                "The ID \"%s\" has no input methods in class \"%s\"",
+                holder.getId(), solutionClass.getName()
+                                                            ));
+        }
+        if(holder.getResultsMethods().isEmpty()) {
+            throw new IllegalArgumentException(String.format(
+                "The ID \"%s\" has no result methods in class \"%s\"",
+                holder.getId(), solutionClass.getName()
+                                                            ));
+        }
+        if(holder.getSolutionMethods().isEmpty()) {
+            throw new IllegalArgumentException(String.format(
+                "The ID \"%s\" has no solution methods in class \"%s\"",
+                holder.getId(), solutionClass.getName()
+                                                            ));
         }
     }
 
-    private void collectResults() throws InvocationTargetException, IllegalAccessException {
-        for(IDHolder holder : ids.values()) {
-            for(AnnotatedMethod annotatedMethod : holder.getResultsMethods()) {
-                Object[] result = (Object[]) annotatedMethod.getMethod().invoke(test);
-                holder.addResults(result);
-            }
+    private void collectInputs(IDHolder holder) throws InvocationTargetException, IllegalAccessException {
+        for(AnnotatedMethod annotatedMethod : holder.getInputsMethods()) {
+            Object[][] result = (Object[][]) annotatedMethod.getMethod().invoke(test);
+            holder.addInputs(result);
         }
     }
 
-    private void validateInputsLength() {
-        for(IDHolder holder : ids.values()) {
-            Object[] results = holder.getResults().get(0);
-            List<Object[][]> inputs = holder.getInputs();
-            int previousLength = -1;
-            for(Object[][] input2d : inputs) {
-                if(input2d == null) {
+    private void collectResults(IDHolder holder) throws InvocationTargetException, IllegalAccessException {
+        for(AnnotatedMethod annotatedMethod : holder.getResultsMethods()) {
+            Object[] result = (Object[]) annotatedMethod.getMethod().invoke(test);
+            holder.addResults(result);
+        }
+    }
+
+    private void validateInputsLength(IDHolder holder) {
+        Object[] results = holder.getResults().get(0);
+        List<Object[][]> inputs = holder.getInputs();
+        int previousLength = -1;
+        for(Object[][] input2d : inputs) {
+            if(input2d == null) {
+                throw new IllegalArgumentException(String.format(
+                    "The ID \"%s\" has an input that returned null in class \"%s\"",
+                    holder.getId(), solutionClass.getName()
+                                                                ));
+            }
+            if(input2d.length != results.length) {
+                throw new IllegalArgumentException(String.format(
+                    "The ID \"%s\" has a set of inputs that does not set the size of the results in class \"%s\"",
+                    holder.getId(), solutionClass.getName()
+                                                                ));
+            }
+            for(Object[] input1d : input2d) {
+                if(input1d == null) {
                     throw new IllegalArgumentException(String.format(
-                        "The ID \"%s\" has an input that returned null in class \"%s\"",
+                        "The ID \"%s\" has a sub-input that returned null in class \"%s\"",
                         holder.getId(), solutionClass.getName()
                                                                     ));
                 }
-                if(input2d.length != results.length) {
+                if(previousLength == -1) previousLength = input1d.length;
+                if(input1d.length != previousLength) {
                     throw new IllegalArgumentException(String.format(
                         "The ID \"%s\" has a set of inputs that does not set the size of the results in class \"%s\"",
                         holder.getId(), solutionClass.getName()
                                                                     ));
                 }
-                for(Object[] input1d : input2d) {
-                    if(input1d == null) {
+            }
+        }
+    }
+
+    private void validateReturnTypes(IDHolder holder) {
+        Object[] results = holder.getResults().get(0);
+        Class<?> solutionReturnType = null;
+        for(AnnotatedMethod method : holder.getSolutionMethods()) {
+            if(solutionReturnType == null) solutionReturnType = method.getMethod().getReturnType();
+            if(solutionReturnType != method.getMethod().getReturnType()) {
+                throw new IllegalArgumentException(String.format(
+                    "The ID \"%s\" has mismatched solution return types in class \"%s\"",
+                    holder.getId(), solutionClass.getName()
+                                                                ));
+            }
+            for(Object result : results) {
+                if(result == null) {
+                    if(solutionReturnType.isPrimitive()) {
                         throw new IllegalArgumentException(String.format(
-                            "The ID \"%s\" has a sub-input that returned null in class \"%s\"",
+                            "The ID \"%s\" has a result with an invalid null parameter type in class \"%s\"",
                             holder.getId(), solutionClass.getName()
                                                                         ));
                     }
-                    if(previousLength == -1) previousLength = input1d.length;
-                    if(input1d.length != previousLength) {
-                        throw new IllegalArgumentException(String.format(
-                            "The ID \"%s\" has a set of inputs that does not set the size of the results in class \"%s\"",
-                            holder.getId(), solutionClass.getName()
-                                                                        ));
-                    }
+                    continue;
+                }
+                Class<?> resultClass = result.getClass();
+                if(solutionReturnType.isArray() != resultClass.isArray()) {
+                    throw new IllegalArgumentException(String.format(
+                        "The ID \"%s\" has mismatched solution and result array return types in class \"%s\"",
+                        holder.getId(), solutionClass.getName()
+                                                                    ));
+                } else if(!SolveUtils.isInstance(solutionReturnType, resultClass)) {
+                    throw new IllegalArgumentException(String.format(
+                        "The ID \"%s\" has a result type that does not match the return type in class \"%s\"",
+                        holder.getId(), solutionClass.getName()
+                                                                    ));
                 }
             }
         }
     }
 
-    private void validateReturnTypes() {
-        for(IDHolder holder : ids.values()) {
-            Object[] results = holder.getResults().get(0);
-            Class<?> solutionReturnType = null;
-            for(AnnotatedMethod method : holder.getSolutionMethods()) {
-                if(solutionReturnType == null) solutionReturnType = method.getMethod().getReturnType();
-                if(solutionReturnType != method.getMethod().getReturnType()) {
+    private void validateParameterTypes(IDHolder holder) {
+        Class<?>[] solutionParameterTypes = null;
+        for(AnnotatedMethod solutionAnnoMethod : holder.getSolutionMethods()) {
+            Method solutionMethod = solutionAnnoMethod.getMethod();
+            Class<?>[] curParameterTypes = solutionMethod.getParameterTypes();
+            if(solutionParameterTypes == null) solutionParameterTypes = curParameterTypes;
+            if(curParameterTypes.length != solutionParameterTypes.length) {
+                throw new IllegalArgumentException(String.format(
+                    "The ID \"%s\" has solutions with different parameter lengths in class \"%s\"",
+                    holder.getId(), solutionClass.getName()
+                                                                ));
+            }
+            for(int i = 0; i < solutionParameterTypes.length; ++i) {
+                Class<?> solutionParamType = solutionParameterTypes[i];
+                Class<?> curParamType = curParameterTypes[i];
+                if(solutionParamType != curParamType) {
                     throw new IllegalArgumentException(String.format(
-                        "The ID \"%s\" has mismatched solution return types in class \"%s\"",
+                        "The ID \"%s\" has mismatched parameter types for solutions in class \"%s\"",
                         holder.getId(), solutionClass.getName()
                                                                     ));
                 }
-                for(Object result : results) {
-                    if(result == null) {
-                        if(solutionReturnType.isPrimitive()) {
+            }
+        }
+        for(Object[][] input2D : holder.getInputs()) {
+            for(Object[] input1D : input2D) {
+                if(input1D.length != solutionParameterTypes.length) {
+                    throw new IllegalArgumentException(String.format(
+                        "The ID \"%s\" has an input with invalid parameter length in class \"%s\"",
+                        holder.getId(), solutionClass.getName()
+                                                                    ));
+                }
+                for(int i = 0; i < input1D.length; ++i) {
+                    Class<?> expectedType = solutionParameterTypes[i];
+                    Object input = input1D[i];
+                    if(input == null) {
+                        if(expectedType.isPrimitive()) {
                             throw new IllegalArgumentException(String.format(
-                                "The ID \"%s\" has a result with an invalid null parameter type in class \"%s\"",
+                                "The ID \"%s\" has an input with invalid null parameter type in class \"%s\"",
                                 holder.getId(), solutionClass.getName()
                                                                             ));
                         }
                         continue;
                     }
-                    Class<?> resultClass = result.getClass();
-                    if(solutionReturnType.isArray() != resultClass.isArray()) {
+                    if(!SolveUtils.isInstance(expectedType, input.getClass())) {
                         throw new IllegalArgumentException(String.format(
-                            "The ID \"%s\" has mismatched solution and result array return types in class \"%s\"",
-                            holder.getId(), solutionClass.getName()
-                                                                        ));
-                    } else if(!SolveUtils.isInstance(solutionReturnType, resultClass)) {
-                        throw new IllegalArgumentException(String.format(
-                            "The ID \"%s\" has a result type that does not match the return type in class \"%s\"",
+                            "The ID \"%s\" has an input with invalid parameter types in class \"%s\"",
                             holder.getId(), solutionClass.getName()
                                                                         ));
                     }
@@ -296,60 +345,86 @@ public class SolutionTestSolver implements Supplier<TestResults> {
         }
     }
 
-    private void validateParameterTypes() {
-        for(IDHolder holder : ids.values()) {
-            Class<?>[] solutionParameterTypes = null;
-            for(AnnotatedMethod solutionAnnoMethod : holder.getSolutionMethods()) {
-                Method solutionMethod = solutionAnnoMethod.getMethod();
-                Class<?>[] curParameterTypes = solutionMethod.getParameterTypes();
-                if(solutionParameterTypes == null) solutionParameterTypes = curParameterTypes;
-                if(curParameterTypes.length != solutionParameterTypes.length) {
-                    throw new IllegalArgumentException(String.format(
-                        "The ID \"%s\" has solutions with different parameter lengths in class \"%s\"",
-                        holder.getId(), solutionClass.getName()
-                                                                    ));
-                }
-                for(int i = 0; i < solutionParameterTypes.length; ++i) {
-                    Class<?> solutionParamType = solutionParameterTypes[i];
-                    Class<?> curParamType = curParameterTypes[i];
-                    if(solutionParamType != curParamType) {
-                        throw new IllegalArgumentException(String.format(
-                            "The ID \"%s\" has mismatched parameter types for solutions in class \"%s\"",
-                            holder.getId(), solutionClass.getName()
-                                                                        ));
-                    }
-                }
-            }
-            for(Object[][] input2D : holder.getInputs()) {
+    private void collectSolutions(IDHolder holder) throws InvocationTargetException, IllegalAccessException {
+        List<AnnotatedMethod> solutionMethods = holder.getSolutionMethods();
+        List<Object[][]> inputs = holder.getInputs();
+        for(AnnotatedMethod annotatedMethod : solutionMethods) {
+            Method method = annotatedMethod.getMethod();
+            for(Object[][] input2D : inputs) {
                 for(Object[] input1D : input2D) {
-                    if(input1D.length != solutionParameterTypes.length) {
-                        throw new IllegalArgumentException(String.format(
-                            "The ID \"%s\" has an input with invalid parameter length in class \"%s\"",
-                            holder.getId(), solutionClass.getName()
-                                                                        ));
-                    }
-                    for(int i = 0; i < input1D.length; ++i) {
-                        Class<?> expectedType = solutionParameterTypes[i];
-                        Object input = input1D[i];
-                        if(input == null) {
-                            if(expectedType.isPrimitive()) {
-                                throw new IllegalArgumentException(String.format(
-                                    "The ID \"%s\" has an input with invalid null parameter type in class \"%s\"",
-                                    holder.getId(), solutionClass.getName()
-                                                                                ));
-                            }
-                            continue;
-                        }
-                        if(!SolveUtils.isInstance(expectedType, input.getClass())) {
-                            throw new IllegalArgumentException(String.format(
-                                "The ID \"%s\" has an input with invalid parameter types in class \"%s\"",
-                                holder.getId(), solutionClass.getName()
-                                                                            ));
-                        }
-                    }
+                    Object solution = method.invoke(test, input1D);
+                    holder.addSolution(solution);
                 }
             }
         }
+    }
+
+    private TestResults toTestResults() {
+        boolean success;
+        int total = 0;
+        int passed = 0;
+        int failed = 0;
+        final List<String> idsList = new ArrayList<>(ids.keySet());
+        final Map<String, List<Object[][]>> inputs = new LinkedHashMap<>();
+        final Map<String, Object[]> results = new LinkedHashMap<>();
+        final Map<String, List<Object>> solutions = new LinkedHashMap<>();
+        final Map<String, List<String>> methodNames = new LinkedHashMap<>();
+        final Map<String, List<Boolean>> hasPassed = new LinkedHashMap<>();
+
+        for(IDHolder holder : ids.values()) {
+            extractInputs(inputs, holder);
+            extractResults(results, holder);
+            extractSolutions(solutions, holder);
+            addIDIfNotPresent(methodNames, holder);
+            extractMethodNames(methodNames, holder);
+            addIDIfNotPresent(hasPassed, holder);
+            processHasPassed(hasPassed, holder);
+        }
+
+        for(List<Boolean> booleanList : hasPassed.values()) {
+            for(Boolean curPassed : booleanList) {
+                ++total;
+                if(curPassed) ++passed;
+                else ++failed;
+            }
+        }
+        success = passed == total;
+        return new TestResults(success, total, passed, failed, idsList, inputs, results, solutions, methodNames, hasPassed);
+    }
+
+    private void processHasPassed(Map<String, List<Boolean>> hasPassed, IDHolder holder) {
+        Object[] curResults = holder.getResults().get(0);
+        List<Object> curSolutions = holder.getSolutions();
+        for(int i = 0; i < curSolutions.size(); ++i) {
+            Object curResult = curResults[i % curResults.length];
+            Object curSolution = curSolutions.get(i);
+            boolean curPassed = SolveUtils.eEquals(curResult, curSolution);
+            hasPassed.get(holder.getId()).add(curPassed);
+        }
+    }
+
+    private void extractMethodNames(Map<String, List<String>> methodNames, IDHolder holder) {
+        for(AnnotatedMethod solutionMethod : holder.getSolutionMethods()) {
+            methodNames.get(holder.getId()).add(solutionMethod.getMethod().getName());
+        }
+    }
+
+    private <T> void addIDIfNotPresent(Map<String, List<T>> methodNames, IDHolder holder) {
+        if(!methodNames.containsKey(holder.getId())) {
+            methodNames.put(holder.getId(), new ArrayList<>());
+        }
+    }
+
+    private void extractSolutions(Map<String, List<Object>> solutions, IDHolder holder) {
+        solutions.put(holder.getId(), holder.getSolutions());
+    }
+
+    private void extractResults(Map<String, Object[]> results, IDHolder holder) {
+        results.put(holder.getId(), holder.getResults().get(0));
+    }
+
+    private void extractInputs(Map<String, List<Object[][]>> inputs, IDHolder holder) {
+        inputs.put(holder.getId(), holder.getInputs());
     }
 
     private void addIDIfNotPresent(AnnotatedMethod method, List<String> idList, SolverInputType type) {

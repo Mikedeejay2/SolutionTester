@@ -42,17 +42,17 @@ public class AnnotatedMethod {
             if(annotationType == Inputs.class) {
                 ++refCount;
                 isInputs = true;
-                inputsIDs.add(((Inputs) annotation).id);
+                inputsIDs.add(((Inputs) annotation).id());
                 type = SolverInputType.INPUTS;
             } else if(annotationType == Results.class) {
                 ++refCount;
                 isResults = true;
-                resultsIDs.add(((Results) annotation).id);
+                resultsIDs.add(((Results) annotation).id());
                 type = SolverInputType.RESULTS;
             } else if(annotationType == Solution.class) {
                 ++refCount;
                 isSolution = true;
-                solutionIDs.add(((Solution) annotation).ids);
+                solutionIDs.add(((Solution) annotation).ids());
                 type = SolverInputType.SOLUTION;
             }
         }

@@ -11,7 +11,7 @@ public class IDHolder {
     private final List<AnnotatedMethod> solutionMethods;
     private final List<Object[][]> inputs;
     private final List<Object[]> results;
-    private final List<Object[]> solutions;
+    private final List<Object> solutions;
 
     public IDHolder(@NotNull String id) {
         this.id = id;
@@ -69,7 +69,7 @@ public class IDHolder {
         return this;
     }
 
-    public IDHolder addSolution(@NotNull final Object[] object) {
+    public IDHolder addSolution(@NotNull final Object object) {
         this.solutions.add(object);
         return this;
     }
@@ -88,8 +88,8 @@ public class IDHolder {
         return this;
     }
 
-    public IDHolder addSolution(@NotNull final Object[]... object) {
-        for(Object[] i : object) {
+    public IDHolder addSolution(@NotNull final Object... object) {
+        for(Object i : object) {
             addSolution(i);
         }
         return this;
@@ -119,7 +119,7 @@ public class IDHolder {
         return Collections.unmodifiableList(results);
     }
 
-    public List<Object[]> getSolutions() {
+    public List<Object> getSolutions() {
         return Collections.unmodifiableList(solutions);
     }
 }

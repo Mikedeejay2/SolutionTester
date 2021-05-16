@@ -7,26 +7,59 @@ import com.mikedeejay2.solutiontester.internal.annotations.Solution;
 
 public class TestSolution implements SolutionTest
 {
-    @Solution
+    @Solution(ids = "test")
     public String[] combineStrNum(String str, int[][] num) {
         return new String[]{str + num[0][0]};
     }
 
-    @Inputs
+    @Solution(ids = "test")
+    public String[] combineStrNum2(String str, int[][] num) {
+        return new String[]{str + num[0][0]};
+    }
+
+    @Inputs(id = "test")
     public Object[][] inputs() {
         return new Object[][] {
-                {"hi!", new Integer[][]{{2}}},
-                {"bye!", new Integer[][]{{4}}},
-                {"How are you?", new Integer[][]{{1337}}}
+                {"hi!", new int[][]{{2}}},
+                {"bye!", new int[][]{{4}}},
+                {"How are you?", new int[][]{{1337}}}
         };
     }
 
-    @Results
+    @Results(id = "test")
     public Object[] results() {
         return new Object[] {
                 new String[]{"hi!2"},
                 new String[]{"bye!4"},
                 new String[]{"How are you?1337"}
+        };
+    }
+
+    @Solution(ids = "random")
+    public String[] combineStrNumRand(String str, int[][] num) {
+        return new String[]{str + num[0][0]};
+    }
+
+    @Solution(ids = "random")
+    public String[] combineStrNum2Rand(String str, int[][] num) {
+        return new String[]{str + num[0][0]};
+    }
+
+    @Inputs(id = "random")
+    public Object[][] inputsRand() {
+        return new Object[][] {
+            {"hi!", new int[][]{{2}}},
+            {"bye!", new int[][]{{4}}},
+            {"How are you?", new int[][]{{1337}}}
+        };
+    }
+
+    @Results(id = "random")
+    public Object[] resultsRand() {
+        return new Object[] {
+            new String[]{"hi!2"},
+            new String[]{"bye!4"},
+            new String[]{"How are you?1337"}
         };
     }
 }
