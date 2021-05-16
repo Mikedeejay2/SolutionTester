@@ -123,10 +123,30 @@ public class SolutionTestSolver implements Supplier<TestResults> {
         if(method.isResults()) ++test;
         if(method.isSolution()) ++test;
         if(test > 1) {
-            throw new IllegalArgumentException(String.format(
+            StringBuilder message = new StringBuilder();
+            message.append(String.format(
                 "The method \"%s\" has too many type annotations in class \"%s\"",
-                method.getMethod().getName(), solutionClass.getName()
-                                                            ));
+                method.getMethod().getName(), solutionClass.getName()));
+            if(test == 2) {
+                message.append("\nThe method has ");
+                int flag = 0;
+                if(method.isInputs()) {
+                    ++flag;
+                    message.append("an inputs annotation and");
+                }
+                if(method.isResults()) {
+                    ++flag;
+                    if(flag == 1) {
+                        message.append(" a results annotation and");
+                    } else {
+                        message.append(" a results annotation");
+                    }
+                }
+                if(method.isSolution()) {
+                    message.append(" a solution annotation");
+                }
+            }
+            throw new IllegalArgumentException(message.toString());
         }
     }
 
@@ -144,7 +164,9 @@ public class SolutionTestSolver implements Supplier<TestResults> {
                 }
                 if(!(returnType.isArray() && returnType.getComponentType().isArray())) {
                     throw new IllegalArgumentException(String.format(
-                        "The input method \"%s\" does not have the correct return type in class \"%s\"",
+                        "The input method \"%s\" does not have the correct return type in class \"%s\"" +
+                        "\nInput methods can only return a 2D array of objects (Object[][]), each index being a list of " +
+                        "parameters to send to the solution methods",
                         annotatedMethod.getMethod().getName(), solutionClass.getName()
                                                                     ));
                 }
@@ -158,7 +180,9 @@ public class SolutionTestSolver implements Supplier<TestResults> {
                 }
                 if(!returnType.isArray()) {
                     throw new IllegalArgumentException(String.format(
-                        "The input method \"%s\" does not have the correct return type in class \"%s\"",
+                        "The input method \"%s\" does not have the correct return type in class \"%s\"" +
+                        "\nResult methods can only return an array of objects (Object[]), each index being an expected " +
+                        "result of the solution methods",
                         annotatedMethod.getMethod().getName(), solutionClass.getName()
                                                                     ));
                 }
@@ -169,7 +193,8 @@ public class SolutionTestSolver implements Supplier<TestResults> {
     private void validateIDsFilled() {
         if(ids.isEmpty()) {
             throw new IllegalArgumentException(String.format(
-                "No IDs exist in class \"%s\"",
+                "No IDs exist in class \"%s\", this is usually caused by attempting to run a unit test on a class with " +
+                "no testing methods",
                 solutionClass.getName()
                                                             ));
         }
@@ -178,7 +203,8 @@ public class SolutionTestSolver implements Supplier<TestResults> {
     private void validateSingleResults(IDHolder holder) {
         if(holder.getResults().size() > 1) {
             throw new IllegalArgumentException(String.format(
-                "The ID \"%s\" has multiple results methods in class \"%s\"",
+                "The ID \"%s\" has multiple results methods in class \"%s\"" +
+                "\nAn ID can only have a single results method linked to it",
                 holder.getId(), solutionClass.getName()
                                                             ));
         }
