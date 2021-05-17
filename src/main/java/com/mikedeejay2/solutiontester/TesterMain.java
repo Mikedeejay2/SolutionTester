@@ -1,10 +1,10 @@
 package com.mikedeejay2.solutiontester;
 
-import com.mikedeejay2.solutiontester.internal.DeprecatedSolutionTester;
+import com.mikedeejay2.solutiontester.internal.test.SolutionTester;
 
 public class TesterMain {
     public static void main(String[] args) {
-        DeprecatedSolutionTester runner = new DeprecatedSolutionTester();
-        runner.run(new TestSolution());
+        SolutionTester tester = new SolutionTester();
+        tester.apply(new TestSolution());
     }
 }
