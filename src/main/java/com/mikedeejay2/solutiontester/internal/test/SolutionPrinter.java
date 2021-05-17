@@ -41,7 +41,7 @@ public class SolutionPrinter implements Consumer<TestResults> {
         final List<String> strings = new ArrayList<>();
 
         for(TestResults.TestResult testResult : testResults.getResults().values()) {
-            strings.add(toMessage(testResult));
+            strings.add(toMessage(testResult, testResults.getIds().size() > 1));
         }
 
         for(String string : strings) {
@@ -50,7 +50,7 @@ public class SolutionPrinter implements Consumer<TestResults> {
         return str.toString();
     }
 
-    public String toMessage(@NotNull TestResults.TestResult testResult) {
+    public String toMessage(@NotNull final TestResults.TestResult testResult, final boolean appendID) {
         final List<String> expected = new ArrayList<>();
         final List<String> run = new ArrayList<>();
         final List<String> lines = new ArrayList<>();
@@ -58,7 +58,9 @@ public class SolutionPrinter implements Consumer<TestResults> {
         int expectedLength = -1;
         int runLength = -1;
 
-        lines.add(String.format("Test ID \"%s\":", testResult.getId()));
+        if(appendID) {
+            lines.add(String.format("Test ID \"%s\":", testResult.getId()));
+        }
 
         for(int solutionI = 0; solutionI < testResult.getSolutions().size(); ++solutionI) {
             int resultsI = solutionI % testResult.getResults().length;
