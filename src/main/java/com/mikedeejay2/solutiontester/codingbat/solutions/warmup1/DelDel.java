@@ -29,19 +29,19 @@ public String delDel(String str) {
 
 
     @Inputs
-    public Object[] inputs() {
-        return new Object[] {
-            "adelbc",
-            "adelHello",
-            "adedbc",
-            "abcdel",
-            "add",
-            "ad",
-            "a",
-            "",
-            "del",
-            "adel",
-            "aadelbb",
+    public Object[][] inputs() {
+        return new Object[][] {
+            {"adelbc"},
+            {"adelHello"},
+            {"adedbc"},
+            {"abcdel"},
+            {"add"},
+            {"ad"},
+            {"a"},
+            {""},
+            {"del"},
+            {"adel"},
+            {"aadelbb"},
         };
     }
 

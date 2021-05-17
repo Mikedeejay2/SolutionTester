@@ -34,21 +34,21 @@ public int last2(String str) {
 
 
     @Inputs
-    public Object[] inputs() {
-        return new Object[] {
-            "hixxhi",
-            "xaxxaxaxx",
-            "axxxaaxx",
-            "xxaxxaxxaxx",
-            "xaxaxaxx",
-            "xxxx",
-            "13121312",
-            "11212",
-            "13121311",
-            "1717171",
-            "hi",
-            "h",
-            "",
+    public Object[][] inputs() {
+        return new Object[][] {
+            {"hixxhi"},
+            {"xaxxaxaxx"},
+            {"axxxaaxx"},
+            {"xxaxxaxxaxx"},
+            {"xaxaxaxx"},
+            {"xxxx"},
+            {"13121312"},
+            {"11212"},
+            {"13121311"},
+            {"1717171"},
+            {"hi"},
+            {"h"},
+            {""},
         };
     }
 

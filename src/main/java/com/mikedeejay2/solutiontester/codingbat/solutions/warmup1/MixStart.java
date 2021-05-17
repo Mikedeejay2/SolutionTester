@@ -28,15 +28,15 @@ public boolean mixStart(String str) {
 
 
     @Inputs
-    public Object[] inputs() {
-        return new Object[] {
-            "mix snacks",
-            "pix snacks",
-            "piz snacks",
-            "nix",
-            "ni",
-            "n",
-            "",
+    public Object[][] inputs() {
+        return new Object[][] {
+            {"mix snacks"},
+            {"pix snacks"},
+            {"piz snacks"},
+            {"nix"},
+            {"ni"},
+            {"n"},
+            {""},
         };
     }
 

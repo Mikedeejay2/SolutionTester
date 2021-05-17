@@ -31,20 +31,20 @@ public String startOz(String str) {
 
 
     @Inputs
-    public Object[] inputs() {
-        return new Object[] {
-            "ozymandias",
-            "bzoo",
-            "oxx",
-            "oz",
-            "ounce",
-            "o",
-            "abc",
-            "",
-            "zoo",
-            "aztec",
-            "zzzz",
-            "oznic",
+    public Object[][] inputs() {
+        return new Object[][] {
+            {"ozymandias"},
+            {"bzoo"},
+            {"oxx"},
+            {"oz"},
+            {"ounce"},
+            {"o"},
+            {"abc"},
+            {""},
+            {"zoo"},
+            {"aztec"},
+            {"zzzz"},
+            {"oznic"},
         };
     }
 

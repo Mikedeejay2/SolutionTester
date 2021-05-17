@@ -32,17 +32,17 @@ int countXX(String str) {
 
 
     @Inputs
-    public Object[] inputs() {
-        return new Object[] {
-            "abcxx",
-            "xxx",
-            "xxxx",
-            "abc",
-            "Hello there",
-            "Hexxo thxxe",
-            "",
-            "Kittens",
-            "Kittensxxx",
+    public Object[][] inputs() {
+        return new Object[][] {
+            {"abcxx"},
+            {"xxx"},
+            {"xxxx"},
+            {"abc"},
+            {"Hello there"},
+            {"Hexxo thxxe"},
+            {""},
+            {"Kittens"},
+            {"Kittensxxx"},
         };
     }
 

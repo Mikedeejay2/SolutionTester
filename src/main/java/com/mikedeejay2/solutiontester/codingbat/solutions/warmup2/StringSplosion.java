@@ -32,18 +32,18 @@ public String stringSplosion(String str) {
 
 
     @Inputs
-    public Object[] inputs() {
-        return new Object[] {
-            "Code",
-            "abc",
-            "ab",
-            "x",
-            "fade",
-            "There",
-            "Kitten",
-            "Bye",
-            "Good",
-            "Bad",
+    public Object[][] inputs() {
+        return new Object[][] {
+            {"Code"},
+            {"abc"},
+            {"ab"},
+            {"x"},
+            {"fade"},
+            {"There"},
+            {"Kitten"},
+            {"Bye"},
+            {"Good"},
+            {"Bad"},
         };
     }
 

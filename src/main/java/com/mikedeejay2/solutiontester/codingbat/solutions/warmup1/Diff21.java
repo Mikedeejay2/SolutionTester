@@ -29,20 +29,20 @@ public int diff21(int n) {
 
 
     @Inputs
-    public Object[] inputs() {
-        return new Object[] {
-                19,
-                10,
-                21,
-                22,
-                25,
-                30,
-                0,
-                1,
-                2,
-                -1,
-                -2,
-                50,
+    public Object[][] inputs() {
+        return new Object[][] {
+            {19},
+            {10},
+            {21},
+            {22},
+            {25},
+            {30},
+            {0},
+            {1},
+            {2},
+            {-1},
+            {-2},
+            {50},
         };
     }
 

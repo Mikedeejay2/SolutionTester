@@ -30,15 +30,15 @@ public String endUp(String str) {
 
 
     @Inputs
-    public Object[] inputs() {
-        return new Object[] {
-            "Hello",
-            "hi there",
-            "hi",
-            "woo hoo",
-            "xyz12",
-            "x",
-            "",
+    public Object[][] inputs() {
+        return new Object[][] {
+            {"Hello"},
+            {"hi there"},
+            {"hi"},
+            {"woo hoo"},
+            {"xyz12"},
+            {"x"},
+            {""},
         };
     }
 

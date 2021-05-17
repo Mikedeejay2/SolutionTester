@@ -29,14 +29,14 @@ public boolean stringE(String str) {
 
 
     @Inputs
-    public Object[] inputs() {
-        return new Object[] {
-            "Hello",
-            "Heelle",
-            "Heelele",
-            "Hll",
-            "e",
-            "",
+    public Object[][] inputs() {
+        return new Object[][] {
+            {"Hello"},
+            {"Heelle"},
+            {"Heelele"},
+            {"Hll"},
+            {"e"},
+            {""},
         };
     }
 

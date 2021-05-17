@@ -30,15 +30,15 @@ public String front3(String str) {
 
 
     @Inputs
-    public Object[] inputs() {
-        return new Object[] {
-            "Java",
-            "Chocolate",
-            "abc",
-            "abcXYZ",
-            "ab",
-            "a",
-            "",
+    public Object[][] inputs() {
+        return new Object[][] {
+            {"Java"},
+            {"Chocolate"},
+            {"abc"},
+            {"abcXYZ"},
+            {"ab"},
+            {"a"},
+            {""},
         };
     }
 

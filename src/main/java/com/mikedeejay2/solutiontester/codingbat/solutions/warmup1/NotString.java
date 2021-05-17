@@ -29,15 +29,15 @@ public String notString(String str) {
 
 
     @Inputs
-    public Object[] inputs() {
-        return new Object[] {
-                "candy",
-                "x",
-                "not bad",
-                "bad",
-                "not",
-                "is not",
-                "no",
+    public Object[][] inputs() {
+        return new Object[][] {
+            {"candy"},
+            {"x"},
+            {"not bad"},
+            {"bad"},
+            {"not"},
+            {"is not"},
+            {"no"},
         };
     }
 

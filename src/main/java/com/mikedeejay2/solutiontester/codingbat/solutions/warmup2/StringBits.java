@@ -32,18 +32,18 @@ public String stringBits(String str) {
 
 
     @Inputs
-    public Object[] inputs() {
-        return new Object[] {
-            "Hello",
-            "Hi",
-            "Heeololeo",
-            "HiHiHi",
-            "",
-            "Greetings",
-            "Chocoate",
-            "pi",
-            "Hello Kitten",
-            "hxaxpxpxy",
+    public Object[][] inputs() {
+        return new Object[][] {
+            {"Hello"},
+            {"Hi"},
+            {"Heeololeo"},
+            {"HiHiHi"},
+            {""},
+            {"Greetings"},
+            {"Chocoate"},
+            {"pi"},
+            {"Hello Kitten"},
+            {"hxaxpxpxy"},
         };
     }
 

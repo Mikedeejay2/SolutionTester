@@ -28,16 +28,16 @@ public boolean startHi(String str) {
 
 
     @Inputs
-    public Object[] inputs() {
-        return new Object[] {
-            "hi there",
-            "hi",
-            "hello hi",
-            "he",
-            "h",
-            "",
-            "ho hi",
-            "hi ho",
+    public Object[][] inputs() {
+        return new Object[][] {
+            {"hi there"},
+            {"hi"},
+            {"hello hi"},
+            {"he"},
+            {"h"},
+            {""},
+            {"ho hi"},
+            {"hi ho"},
         };
     }
 

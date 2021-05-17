@@ -28,19 +28,19 @@ boolean doubleX(String str) {
 
 
     @Inputs
-    public Object[] inputs() {
-        return new Object[] {
-            "axxbb",
-            "axaxax",
-            "xxxxx",
-            "xaxxx",
-            "aaaax",
-            "",
-            "abc",
-            "x",
-            "xx",
-            "xax",
-            "xaxx",
+    public Object[][] inputs() {
+        return new Object[][] {
+            {"axxbb"},
+            {"axaxax"},
+            {"xxxxx"},
+            {"xaxxx"},
+            {"aaaax"},
+            {""},
+            {"abc"},
+            {"x"},
+            {"xx"},
+            {"xax"},
+            {"xaxx"},
         };
     }
 

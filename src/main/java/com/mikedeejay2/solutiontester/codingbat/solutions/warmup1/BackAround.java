@@ -29,14 +29,14 @@ public String backAround(String str) {
 
 
     @Inputs
-    public Object[] inputs() {
-        return new Object[] {
-            "cat",
-            "Hello",
-            "a",
-            "abc",
-            "read",
-            "boo",
+    public Object[][] inputs() {
+        return new Object[][] {
+            {"cat"},
+            {"Hello"},
+            {"a"},
+            {"abc"},
+            {"read"},
+            {"boo"},
         };
     }
 

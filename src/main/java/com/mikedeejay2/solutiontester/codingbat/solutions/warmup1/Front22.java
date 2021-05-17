@@ -30,15 +30,15 @@ public String front22(String str) {
 
 
     @Inputs
-    public Object[] inputs() {
-        return new Object[] {
-            "kitten",
-            "Ha",
-            "abc",
-            "ab",
-            "a",
-            "",
-            "Logic",
+    public Object[][] inputs() {
+        return new Object[][] {
+            {"kitten"},
+            {"Ha"},
+            {"abc"},
+            {"ab"},
+            {"a"},
+            {""},
+            {"Logic"},
         };
     }
 

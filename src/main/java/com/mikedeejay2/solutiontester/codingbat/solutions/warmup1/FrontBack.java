@@ -28,16 +28,16 @@ public String frontBack(String str) {
 
 
     @Inputs
-    public Object[] inputs() {
-        return new Object[] {
-            "code",
-            "a",
-            "ab",
-            "abc",
-            "",
-            "Chocolate",
-            "aavJ",
-            "hello",
+    public Object[][] inputs() {
+        return new Object[][] {
+            {"code"},
+            {"a"},
+            {"ab"},
+            {"abc"},
+            {""},
+            {"Chocolate"},
+            {"aavJ"},
+            {"hello"},
         };
     }
 
