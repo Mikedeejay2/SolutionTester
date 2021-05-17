@@ -27,9 +27,13 @@ public class SolutionPrinter implements Consumer<TestResults> {
 
     @Override
     public void accept(@NotNull TestResults testResults) {
-        Objects.requireNonNull(testResults, "TestResults cannot be null");
-        String message = toFullMessage(testResults);
-        printOut(message);
+        try {
+            Objects.requireNonNull(testResults, "TestResults cannot be null");
+            String message = toFullMessage(testResults);
+            printOut(message);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public String toFullMessage(@NotNull TestResults testResults) {
@@ -111,20 +115,39 @@ public class SolutionPrinter implements Consumer<TestResults> {
         StringBuilder headerLine = new StringBuilder();
         int expectedSpaceLength = (expectedLength - EXPECTED_HEADER.length()) / 2;
         int runSpaceLength = (runLength - RUN_HEADER.length()) / 2;
-        String spaceExpected = new String(new char[expectedSpaceLength]).replace("\0", " ");
-        String spaceRun = new String(new char[runSpaceLength]).replace("\0", " ");
+        String spaceExpected = new String(new char[Math.max(expectedSpaceLength, 0)]).replace("\0", " ");
+        String spaceRun = new String(new char[Math.max(runSpaceLength, 0)]).replace("\0", " ");
+        String space1 = "  ";
+        if(expectedSpaceLength < 0) {
+            space1 = " ";
+        }
+        String space2 = "   ";
+        if(expectedSpaceLength < 0) {
+            if(runSpaceLength < 0) {
+                space2 = " ";
+            } else {
+                space2 = "  ";
+            }
+        } else if(runSpaceLength < 0) {
+            space2 = "  ";
+        }
+        String space3 = "   ";
+        if(runSpaceLength < 0) {
+            space3 = "  ";
+        }
+
         headerLine
-            .append("  ")
+            .append(space1)
             .append(spaceExpected)
             .append(EXPECTED_HEADER)
             .append(spaceExpected)
-            .append(expectedLength % 2 != EXPECTED_HEADER.length() % 2 ? " " : "")
-            .append("   ")
+            .append(expectedLength % 2 != EXPECTED_HEADER.length() % 2 && expectedSpaceLength != 0 ? " " : "")
+            .append(space2)
             .append(spaceRun)
             .append(RUN_HEADER)
             .append(spaceRun)
-            .append(runLength % 2 != RUN_HEADER.length() % 2 ? " " : "")
-            .append("   ");
+            .append(runLength % 2 != RUN_HEADER.length() % 2 && runSpaceLength != 0 ? " " : "")
+            .append(space3);
 
         lines.add(headerLine.toString());
     }
