@@ -115,4 +115,50 @@ public final class SolveUtils {
         }
         return obj1.equals(obj2);
     }
+
+    public static String quotedToString(Object obj) {
+        StringBuilder result = new StringBuilder();
+        if(obj.getClass().isArray()) {
+            return _quotedToString((Object[]) obj);
+        }
+        if(obj instanceof String) {
+            result.append('\"');
+            result.append(obj);
+            result.append('\"');
+        } else if(obj instanceof Character) {
+            result.append('\'');
+            result.append(obj);
+            result.append('\'');
+        } else {
+            result.append(obj);
+        }
+        return result.toString();
+    }
+
+    private static String _quotedToString(Object[] obj) {
+        StringBuilder result = new StringBuilder();
+        result.append("[");
+        for(int i = 0; i < obj.length; ++i) {
+            Object o = obj[i];
+            if(o.getClass().isArray()) {
+                if(o.getClass().getComponentType().isPrimitive()) {
+                    if(o instanceof byte[]) result.append(Arrays.toString((byte[]) o));
+                    if(o instanceof short[]) result.append(Arrays.toString((short[]) o));
+                    if(o instanceof int[]) result.append(Arrays.toString((int[]) o));
+                    if(o instanceof long[]) result.append(Arrays.toString((long[]) o));
+                    if(o instanceof char[]) result.append(Arrays.toString((char[]) o));
+                    if(o instanceof float[]) result.append(Arrays.toString((float[]) o));
+                    if(o instanceof double[]) result.append(Arrays.toString((double[]) o));
+                    if(o instanceof boolean[]) result.append(Arrays.toString((boolean[]) o));
+                } else {
+                    result.append(_quotedToString((Object[]) o));
+                }
+            } else result.append(quotedToString(o));
+            if(i < obj.length - 1) {
+                result.append(", ");
+            }
+        }
+        result.append("]");
+        return result.toString();
+    }
 }

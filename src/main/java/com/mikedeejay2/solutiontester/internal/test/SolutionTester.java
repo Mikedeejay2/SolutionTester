@@ -12,7 +12,7 @@ public class SolutionTester implements Function<SolutionTest, CompletableFuture<
     protected SolutionPrinter printer;
 
     public SolutionTester() {
-        this.printer = new SolutionPrinter();
+        this.printer = new SolutionPrinter(System.out);
     }
 
     public SolutionTester(@Nullable SolutionPrinter printer) {
@@ -21,7 +21,7 @@ public class SolutionTester implements Function<SolutionTest, CompletableFuture<
 
     private CompletableFuture<TestResults> solve(@NotNull final SolutionTest solutionTest) {
         final CompletableFuture<TestResults> testFuture = CompletableFuture.supplyAsync(solutionTest._toSolver());
-        testFuture.thenAccept(printer);
+        if(printer != null) testFuture.thenAccept(printer);
 
         return testFuture;
     }

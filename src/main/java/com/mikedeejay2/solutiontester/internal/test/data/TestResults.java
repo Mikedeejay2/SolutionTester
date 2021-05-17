@@ -1,6 +1,7 @@
 package com.mikedeejay2.solutiontester.internal.test.data;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -41,16 +42,55 @@ public class TestResults {
             this.passed = passed;
             this.failed = failed;
             this.id = id;
-            this.inputs = inputs;
+            this.inputs = Collections.unmodifiableList(inputs);
             this.results = results;
-            this.solutions = solutions;
-            this.methodNames = methodNames;
-            this.hasPassed = hasPassed;
+            this.solutions = Collections.unmodifiableList(solutions);
+            this.methodNames = Collections.unmodifiableList(methodNames);
+            this.hasPassed = Collections.unmodifiableList(hasPassed);
+        }
+
+        public boolean isSuccess() {
+            return success;
+        }
+
+        public int getTotal() {
+            return total;
+        }
+
+        public int getPassed() {
+            return passed;
+        }
+
+        public int getFailed() {
+            return failed;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public List<Object[][]> getInputs() {
+            return inputs;
+        }
+
+        public Object[] getResults() {
+            return results;
+        }
+
+        public List<Object> getSolutions() {
+            return solutions;
+        }
+
+        public List<String> getMethodNames() {
+            return methodNames;
+        }
+
+        public List<Boolean> getHasPassed() {
+            return hasPassed;
         }
 
         @Override
-        public String toString()
-        {
+        public String toString() {
             return "TestResult{" +
                 "\nsuccess=" + success +
                 ", \ntotal=" + total +
@@ -77,8 +117,8 @@ public class TestResults {
         this.total = total;
         this.passed = passed;
         this.failed = failed;
-        this.ids = ids;
-        this.results = results;
+        this.ids = Collections.unmodifiableList(ids);
+        this.results = Collections.unmodifiableMap(results);
     }
 
     public boolean isSuccess() {
@@ -106,8 +146,7 @@ public class TestResults {
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "TestResults{" +
             "\nsuccess=" + success +
             ", \ntotal=" + total +

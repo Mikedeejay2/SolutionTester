@@ -31,6 +31,15 @@ public class TestSolution implements SolutionTest
         };
     }
 
+    @Inputs(id = "test")
+    public Object[][] inputs2() {
+        return new Object[][] {
+            {"hi!", new int[][]{{2}}},
+            {"bye!", new int[][]{{4}}},
+            {"How are you?", new int[][]{{1337}}}
+        };
+    }
+
     @Results(id = "test")
     public Object[] results() {
         return new Object[] {
