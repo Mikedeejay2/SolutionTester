@@ -20,7 +20,7 @@ public class MixStart implements SolutionTest
  */
 @Solution
 public boolean mixStart(String str) {
-    return str.indexOf("ix") == 1;
+  return str.indexOf("ix") == 1;
 }
 
 

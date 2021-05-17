@@ -20,11 +20,11 @@ public class StringSplosion implements SolutionTest
  */
 @Solution
 public String stringSplosion(String str) {
-    StringBuilder res = new StringBuilder();
-    for(int i = 0; i <= str.length(); ++i) {
-        res.append(str, 0, i);
-    }
-    return res.toString();
+  StringBuilder res = new StringBuilder();
+  for(int i = 0; i <= str.length(); ++i) {
+    res.append(str, 0, i);
+  }
+  return res.toString();
 }
 
 

@@ -20,7 +20,7 @@ public class StartHi implements SolutionTest
  */
 @Solution
 public boolean startHi(String str) {
-    return str.startsWith("hi");
+  return str.startsWith("hi");
 }
 
 

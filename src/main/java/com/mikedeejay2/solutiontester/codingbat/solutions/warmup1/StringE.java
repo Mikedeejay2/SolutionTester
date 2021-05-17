@@ -20,8 +20,8 @@ public class StringE implements SolutionTest
  */
 @Solution
 public boolean stringE(String str) {
-    long count = str.chars().filter(c -> c == 'e').count();
-    return count >= 1 && count <= 3;
+  long count = str.chars().filter(c -> c == 'e').count();
+  return count >= 1 && count <= 3;
 }
 
 

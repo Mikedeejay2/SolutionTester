@@ -21,7 +21,7 @@ public class DelDel implements SolutionTest
  */
 @Solution
 public String delDel(String str) {
-    return str.indexOf("del") == 1 ? str.replaceFirst("del", "") : str;
+  return str.indexOf("del") == 1 ? str.replaceFirst("del", "") : str;
 }
 
 

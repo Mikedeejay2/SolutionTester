@@ -21,8 +21,8 @@ public class Close10 implements SolutionTest
  */
 @Solution
 public int close10(int a, int b) {
-    int a1 = Math.abs(a - 10), b1 = Math.abs(b - 10);
-    return a1 == b1 ? 0 : a1 < b1 ? a : b;
+  int a1 = Math.abs(a - 10), b1 = Math.abs(b - 10);
+  return a1 == b1 ? 0 : a1 < b1 ? a : b;
 }
 
 

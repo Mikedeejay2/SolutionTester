@@ -21,7 +21,7 @@ public class NotString implements SolutionTest
  */
 @Solution
 public String notString(String str) {
-    return str.startsWith("not") ? str : "not " + str;
+  return str.startsWith("not") ? str : "not " + str;
 }
 
 

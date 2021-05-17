@@ -21,7 +21,7 @@ public class Or35 implements SolutionTest
  */
 @Solution
 public boolean or35(int n) {
-    return n >= 0 && (n % 3 == 0 || n % 5 == 0);
+  return n >= 0 && (n % 3 == 0 || n % 5 == 0);
 }
 
 

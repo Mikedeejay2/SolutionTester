@@ -21,8 +21,8 @@ public class Front22 implements SolutionTest
  */
 @Solution
 public String front22(String str) {
-    String front = str.length() <= 2 ? str : str.substring(0, 2);
-    return front + str + front;
+  String front = str.length() <= 2 ? str : str.substring(0, 2);
+  return front + str + front;
 }
 
 

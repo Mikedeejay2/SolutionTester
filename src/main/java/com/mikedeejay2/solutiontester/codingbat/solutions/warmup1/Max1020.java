@@ -21,7 +21,7 @@ public class Max1020 implements SolutionTest
  */
 @Solution
 public int max1020(int a, int b) {
-    return a > 20 || a < 10 ? b > 20 || b < 10 ? 0 : b : b > 20 || b < 10 ? a : Math.max(a, b);
+  return a > 20 || a < 10 ? b > 20 || b < 10 ? 0 : b : b > 20 || b < 10 ? a : Math.max(a, b);
 }
 
 

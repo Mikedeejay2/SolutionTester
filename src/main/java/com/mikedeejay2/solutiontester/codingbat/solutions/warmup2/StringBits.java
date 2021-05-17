@@ -20,11 +20,11 @@ public class StringBits implements SolutionTest
  */
 @Solution
 public String stringBits(String str) {
-    StringBuilder res = new StringBuilder();
-    for(int i = 0; i < str.length(); i += 2) {
-        res.append(str.charAt(i));
-    }
-    return res.toString();
+  StringBuilder res = new StringBuilder();
+  for(int i = 0; i < str.length(); i += 2) {
+    res.append(str.charAt(i));
+  }
+  return res.toString();
 }
 
 

@@ -20,7 +20,7 @@ public class DoubleX implements SolutionTest
  */
 @Solution
 boolean doubleX(String str) {
-    return str.contains("x") && str.indexOf("x") != str.length() - 1 && str.charAt(str.indexOf("x") + 1) == 'x';
+  return str.contains("x") && str.indexOf("x") != str.length() - 1 && str.charAt(str.indexOf("x") + 1) == 'x';
 }
 
 

@@ -21,11 +21,11 @@ public class EveryNth implements SolutionTest
  */
 @Solution
 public String everyNth(String str, int n) {
-    StringBuilder res = new StringBuilder();
-    for(int i = 0; i < str.length(); i += n) {
-        res.append(str.charAt(i));
-    }
-    return res.toString();
+  StringBuilder res = new StringBuilder();
+  for(int i = 0; i < str.length(); i += n) {
+    res.append(str.charAt(i));
+  }
+  return res.toString();
 }
 
 

@@ -21,12 +21,12 @@ public class Last2 implements SolutionTest
  */
 @Solution
 public int last2(String str) {
-    if(str.length() < 4) return 0;
-    int count = 0;
-    for(int i = 0; i < str.length() - 2; ++i) {
-        if(str.startsWith(str.substring(str.length() - 2), i)) ++count;
-    }
-    return count;
+  if(str.length() < 4) return 0;
+  int count = 0;
+  for(int i = 0; i < str.length() - 2; ++i) {
+    if(str.startsWith(str.substring(str.length() - 2), i)) ++count;
+  }
+  return count;
 }
 
 

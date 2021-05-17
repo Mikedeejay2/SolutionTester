@@ -21,9 +21,9 @@ public class StartOz implements SolutionTest
  */
 @Solution
 public String startOz(String str) {
-    return str.length() >= 2 && str.startsWith("oz") ? "oz" :
-           str.length() >= 1 && str.charAt(0) == 'o' ? "o" :
-           str.length() >= 2 && str.charAt(1) == 'z' ? "z" : "";
+  return str.length() >= 2 && str.startsWith("oz") ? "oz" :
+    str.length() >= 1 && str.charAt(0) == 'o' ? "o" :
+    str.length() >= 2 && str.charAt(1) == 'z' ? "z" : "";
 }
 
 

@@ -20,11 +20,11 @@ public class CountXX implements SolutionTest
  */
 @Solution
 int countXX(String str) {
-    int count = 0;
-    for(int i = 0; i < str.length() - 1; ++i) {
-        if(str.startsWith("xx", i)) ++count;
-    }
-    return count;
+  int count = 0;
+  for(int i = 0; i < str.length() - 1; ++i) {
+    if(str.startsWith("xx", i)) ++count;
+  }
+  return count;
 }
 
 

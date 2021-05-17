@@ -20,7 +20,7 @@ public class In1020 implements SolutionTest
  */
 @Solution
 public boolean in1020(int a, int b) {
-    return a >= 10 && a <= 20 || b >= 10 && b <= 20;
+  return a >= 10 && a <= 20 || b >= 10 && b <= 20;
 }
 
 

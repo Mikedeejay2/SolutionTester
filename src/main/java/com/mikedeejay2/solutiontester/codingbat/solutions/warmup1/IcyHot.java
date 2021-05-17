@@ -20,7 +20,7 @@ public class IcyHot implements SolutionTest
  */
 @Solution
 public boolean icyHot(int temp1, int temp2) {
-    return temp1 < 0 == temp2 > 100;
+  return temp1 < 0 == temp2 > 100;
 }
 
 
