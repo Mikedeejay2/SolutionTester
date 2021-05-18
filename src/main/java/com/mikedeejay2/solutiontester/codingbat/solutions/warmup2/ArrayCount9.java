@@ -27,6 +27,19 @@ public int arrayCount9(int[] nums) {
 
 
 
+/* Solution using for loop
+
+@Solution
+public int arrayCount9(int[] nums) {
+  int count = 0;
+  for(int num : nums) {
+      if(num == 9) ++count;
+  }
+  return count;
+}
+
+ */
+
     @Inputs
     public Object[][] inputs() {
         return new Object[][] {
