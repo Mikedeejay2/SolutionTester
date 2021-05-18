@@ -32,7 +32,7 @@ public boolean arrayFront9(int[] nums) {
 /* Solution using Streams
 
 @Solution
-public boolean arrayFront92(int[] nums) {
+public boolean arrayFront9(int[] nums) {
   return java.util.Arrays
     .stream(java.util.Arrays.copyOfRange(nums, 0, Math.min(nums.length, 4)))
     .filter(n -> n == 9)
