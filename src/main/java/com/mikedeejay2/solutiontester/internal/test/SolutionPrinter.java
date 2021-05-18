@@ -65,7 +65,7 @@ public class SolutionPrinter implements Consumer<TestResults> {
         for(int solutionI = 0; solutionI < testResult.getSolutions().size(); ++solutionI) {
             int resultsI = solutionI % testResult.getResults().length;
             Object[] rawInputs = getCorrectInput(testResult, solutionI);
-            int methodNameMod = (solutionI / testResult.getResults().length) % testResult.getInputs().size();
+            int methodNameMod = (solutionI / testResult.getResults().length) % testResult.getMethodNames().size();
             Object rawSolution = testResult.getSolutions().get(solutionI);
             Object rawResult = testResult.getResults()[resultsI];
             String methodName = testResult.getMethodNames().get(methodNameMod);
