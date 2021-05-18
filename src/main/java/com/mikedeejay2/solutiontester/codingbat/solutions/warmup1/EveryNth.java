@@ -32,7 +32,7 @@ public String everyNth(String str, int n) {
 
 
 
-/* Solution with streams
+/* Solution using Streams
 
 @Solution
 public String everyNth(String str, int n) {
