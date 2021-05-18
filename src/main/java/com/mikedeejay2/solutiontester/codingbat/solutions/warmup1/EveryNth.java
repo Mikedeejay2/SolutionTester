@@ -32,6 +32,18 @@ public String everyNth(String str, int n) {
 
 
 
+/* Solution with streams
+
+@Solution
+public String everyNth(String str, int n) {
+  return String.join("", java.util.Arrays
+    .stream(str.split(String.format("(?<=\\G.{%1$d})", n)))
+    .map(s -> String.valueOf(s.charAt(0)))
+    .collect(java.util.stream.Collectors.joining()));
+}
+
+ */
+
     @Inputs
     public Object[][] inputs() {
         return new Object[][] {
@@ -57,16 +69,4 @@ public String everyNth(String str, int n) {
             "C",
         };
     }
-
-/* Solution with streams
-
-@Solution
-public String everyNth2(String str, int n) {
-  return String.join("", java.util.Arrays
-    .stream(str.split(String.format("(?<=\\G.{%1$d})", n)))
-    .map(s -> String.valueOf(s.charAt(0)))
-    .collect(java.util.stream.Collectors.joining()));
-}
-
- */
 }
