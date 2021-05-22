@@ -20,7 +20,7 @@ public class StringYak implements SolutionTest
  * stringYak("yak123ya") → "123ya"
  */
 @Solution
-public String stringYak(String str) { 
+public String stringYak(String str) {
   StringBuilder res = new StringBuilder();
   for(int i = 0; i < str.length(); ++i) {
     if(str.charAt(i) == 'y' && i + 2 < str.length() && str.charAt(i + 2) == 'k') i += 2;
