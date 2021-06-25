@@ -14,13 +14,16 @@ public interface SolutionTest
 {
     @Test
     default void testJUnit() throws ExecutionException, InterruptedException {
-        SolutionTester tester = new SolutionTester();
-        CompletableFuture<TestResults> resultsFuture = tester.apply(this);
+        CompletableFuture<TestResults> resultsFuture = _toTester().apply(this);
         TestResults results = resultsFuture.get();
         assertTrue(results.success, "Some tests failed. View above for test results.");
     }
 
     default SolutionTestSolver _toSolver() {
         return new SolutionTestSolver(this);
+    }
+
+    default SolutionTester _toTester() {
+        return new SolutionTester();
     }
 }

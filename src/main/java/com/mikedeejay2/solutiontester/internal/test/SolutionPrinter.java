@@ -3,8 +3,8 @@ package com.mikedeejay2.solutiontester.internal.test;
 import com.mikedeejay2.solutiontester.internal.test.data.TestResults;
 import com.mikedeejay2.solutiontester.internal.util.SolveUtils;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.io.PrintStream;
 import java.util.*;
 import java.util.function.Consumer;
 
@@ -18,9 +18,12 @@ public class SolutionPrinter implements Consumer<TestResults> {
     private static final String CORRECT_MESSAGE = "✓ All Correct";
     private static final String INCORRECT_MESSAGE = "✖ Some tests failed";
 
-    protected PrintStream printer;
+    protected Consumer<String> printer;
 
-    public SolutionPrinter(@NotNull PrintStream printer) {
+    @Nullable
+    protected String finalMessage;
+
+    public SolutionPrinter(@Nullable Consumer<String> printer) {
         Objects.requireNonNull(printer, "PrintStream cannot be null");
         this.printer = printer;
     }
@@ -184,7 +187,18 @@ public class SolutionPrinter implements Consumer<TestResults> {
         return rawInputs;
     }
 
-    public void printOut(String message) {
-        printer.println(message);
+    private void printOut(@NotNull final String message) {
+        if(printer != null) {
+            printer.accept(message);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return finalMessage;
+    }
+
+    public @Nullable String getFinalMessage() {
+        return finalMessage;
     }
 }

@@ -12,7 +12,7 @@ public class SolutionTester implements Function<SolutionTest, CompletableFuture<
     protected SolutionPrinter printer;
 
     public SolutionTester() {
-        this.printer = new SolutionPrinter(System.out);
+        this.printer = new SolutionPrinter(System.out::println);
     }
 
     public SolutionTester(@Nullable SolutionPrinter printer) {
@@ -42,5 +42,10 @@ public class SolutionTester implements Function<SolutionTest, CompletableFuture<
 
     public void setPrinter(SolutionPrinter printer) {
         this.printer = printer;
+    }
+
+    @Override
+    public String toString() {
+        return printer.toString();
     }
 }
