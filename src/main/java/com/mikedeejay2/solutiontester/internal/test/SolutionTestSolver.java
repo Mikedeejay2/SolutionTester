@@ -17,8 +17,8 @@ public class SolutionTestSolver implements Supplier<TestResults> {
 
     private final SolutionTest test;
     private Class<? extends SolutionTest> solutionClass;
-    private List<AnnotatedMethod> annotatedMethods;
-    private Map<String, IDHolder> ids;
+    private final List<AnnotatedMethod> annotatedMethods;
+    private final Map<String, IDHolder> ids;
 
     public SolutionTestSolver(@NotNull SolutionTest test) {
         this.test = test;

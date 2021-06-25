@@ -88,8 +88,7 @@ public class SolutionPrinter implements Consumer<TestResults> {
         return String.join("\n", lines);
     }
 
-    private void generateEnd(TestResults.TestResult testResult, List<String> lines)
-    {
+    private void generateEnd(TestResults.TestResult testResult, List<String> lines) {
         lines.add("");
         if(testResult.isSuccess()) {
             lines.add(CORRECT_MESSAGE);

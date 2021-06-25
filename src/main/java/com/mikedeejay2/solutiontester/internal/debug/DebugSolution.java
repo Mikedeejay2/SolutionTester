@@ -1,11 +1,11 @@
-package com.mikedeejay2.solutiontester;
+package com.mikedeejay2.solutiontester.internal.debug;
 
 import com.mikedeejay2.solutiontester.internal.SolutionTest;
 import com.mikedeejay2.solutiontester.internal.annotations.Inputs;
 import com.mikedeejay2.solutiontester.internal.annotations.Results;
 import com.mikedeejay2.solutiontester.internal.annotations.Solution;
 
-public class TestSolution implements SolutionTest
+public class DebugSolution implements SolutionTest
 {
     @Solution
     public String[] combineStrNumGlobal(String str, int[][] num) {
