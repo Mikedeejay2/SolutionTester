@@ -2,8 +2,8 @@ package com.mikedeejay2.solutiontester.internal.test;
 
 import com.mikedeejay2.solutiontester.internal.SolutionTest;
 import com.mikedeejay2.solutiontester.internal.test.data.TestResults;
-import com.sun.istack.internal.NotNull;
-import com.sun.istack.internal.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;

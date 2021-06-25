@@ -2,7 +2,7 @@ package com.mikedeejay2.solutiontester.internal.test;
 
 import com.mikedeejay2.solutiontester.internal.test.data.TestResults;
 import com.mikedeejay2.solutiontester.internal.util.SolveUtils;
-import com.sun.istack.internal.NotNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.PrintStream;
 import java.util.*;
