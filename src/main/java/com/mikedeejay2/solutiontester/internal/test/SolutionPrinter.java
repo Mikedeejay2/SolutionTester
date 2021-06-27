@@ -24,7 +24,6 @@ public class SolutionPrinter implements Consumer<TestResults> {
     protected String finalMessage;
 
     public SolutionPrinter(@Nullable Consumer<String> printer) {
-        Objects.requireNonNull(printer, "PrintStream cannot be null");
         this.printer = printer;
     }
 
