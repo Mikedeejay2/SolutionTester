@@ -21,7 +21,7 @@ public class Diff21 implements SolutionTest
  */
 @Solution
 public int diff21(int n) {
-  return Math.abs(n > 21 ? (21 - n) * 2 : 21 - n);
+  return n > 21 ? (n - 21) * 2 : 21 - n;
 }
 
 
