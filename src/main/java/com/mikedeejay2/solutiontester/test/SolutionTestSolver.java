@@ -378,11 +378,11 @@ public class SolutionTestSolver implements Supplier<TestResults> {
             Method method = annotatedMethod.getMethod();
             for(Object[][] input2D : inputs) {
                 for(Object[] input1D : input2D) {
-                    Object solution = method.invoke(test, input1D);
                     final long time1 = System.nanoTime();
-                    holder.addSolution(solution);
+                    Object solution = method.invoke(test, input1D);
                     final long time2 = System.nanoTime();
                     final long timeDif = time2 - time1;
+                    holder.addSolution(solution);
                     holder.addTimeNanos(timeDif);
                 }
             }
