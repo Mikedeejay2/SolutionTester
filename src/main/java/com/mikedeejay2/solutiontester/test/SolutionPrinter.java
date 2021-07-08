@@ -17,6 +17,7 @@ public class SolutionPrinter implements Consumer<TestResults> {
     private static final String RUN_HEADER = "Run";
     private static final String CORRECT_MESSAGE = "✓ All Correct";
     private static final String INCORRECT_MESSAGE = "✖ Some tests failed";
+    private static final String TIME_MESSAGE = "Tests ran in %sms";
 
     protected Consumer<String> printer;
 
@@ -87,6 +88,9 @@ public class SolutionPrinter implements Consumer<TestResults> {
         generateLines(expected, run, lines, pass);
         generateEnd(testResult, lines);
 
+        lines.add(String.format(TIME_MESSAGE, testResult.getTimeMS()));
+        lines.add("");
+
         return String.join("\n", lines);
     }
 
@@ -97,7 +101,6 @@ public class SolutionPrinter implements Consumer<TestResults> {
         } else {
             lines.add(INCORRECT_MESSAGE);
         }
-        lines.add("");
     }
 
     private void generateLines(List<String> expected, List<String> run, List<String> lines, List<String> pass) {

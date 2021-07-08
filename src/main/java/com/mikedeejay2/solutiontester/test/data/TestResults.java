@@ -24,6 +24,8 @@ public class TestResults {
         public final List<Object> solutions;
         public final List<String> methodNames;
         public final List<Boolean> hasPassed;
+        public final long timeNanos;
+        public final double timeMS;
 
         public TestResult(
             boolean success,
@@ -35,8 +37,9 @@ public class TestResults {
             Object[] results,
             List<Object> solutions,
             List<String> methodNames,
-            List<Boolean> hasPassed)
-        {
+            List<Boolean> hasPassed,
+            long timeNanos,
+            double timeMS) {
             this.success = success;
             this.total = total;
             this.passed = passed;
@@ -47,6 +50,8 @@ public class TestResults {
             this.solutions = Collections.unmodifiableList(solutions);
             this.methodNames = Collections.unmodifiableList(methodNames);
             this.hasPassed = Collections.unmodifiableList(hasPassed);
+            this.timeNanos = timeNanos;
+            this.timeMS = timeMS;
         }
 
         public boolean isSuccess() {
@@ -89,10 +94,18 @@ public class TestResults {
             return hasPassed;
         }
 
+        public long getTimeNanos() {
+            return timeNanos;
+        }
+
+        public double getTimeMS() {
+            return timeMS;
+        }
+
         @Override
         public String toString() {
             return "TestResult{" +
-                "\nsuccess=" + success +
+                "success=" + success +
                 ", \ntotal=" + total +
                 ", \npassed=" + passed +
                 ", \nfailed=" + failed +
@@ -102,6 +115,8 @@ public class TestResults {
                 ", \nsolutions=" + solutions +
                 ", \nmethodNames=" + methodNames +
                 ", \nhasPassed=" + hasPassed +
+                ", \ntimeNanos=" + timeNanos +
+                ", \ntimeMS=" + timeMS +
                 '}';
         }
     }

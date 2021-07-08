@@ -12,6 +12,7 @@ public class IDHolder {
     private final List<Object[][]> inputs;
     private final List<Object[]> results;
     private final List<Object> solutions;
+    private long timeNanos;
 
     public IDHolder(@NotNull String id) {
         this.id = id;
@@ -21,6 +22,7 @@ public class IDHolder {
         this.inputs = new ArrayList<>();
         this.results = new ArrayList<>();
         this.solutions = new ArrayList<>();
+        this.timeNanos = 0;
     }
 
     public IDHolder addInputsMethod(@NotNull final AnnotatedMethod method) {
@@ -93,6 +95,22 @@ public class IDHolder {
             addSolution(i);
         }
         return this;
+    }
+
+    public void addTimeNanos(long time) {
+        timeNanos += time;
+    }
+
+    public void setTimeNanos(long time) {
+        this.timeNanos = time;
+    }
+
+    public long getTimeNanos() {
+        return timeNanos;
+    }
+
+    public double getTimeAsMS() {
+        return Math.round(timeNanos / 1000000D * 1000D) / 1000D;
     }
 
     public String getId() {

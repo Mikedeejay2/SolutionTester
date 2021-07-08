@@ -379,7 +379,11 @@ public class SolutionTestSolver implements Supplier<TestResults> {
             for(Object[][] input2D : inputs) {
                 for(Object[] input1D : input2D) {
                     Object solution = method.invoke(test, input1D);
+                    final long time1 = System.nanoTime();
                     holder.addSolution(solution);
+                    final long time2 = System.nanoTime();
+                    final long timeDif = time2 - time1;
+                    holder.addTimeNanos(timeDif);
                 }
             }
         }
@@ -404,6 +408,8 @@ public class SolutionTestSolver implements Supplier<TestResults> {
             List<Object> solutions = holder.getSolutions();
             List<String> methodNames = new ArrayList<>();
             List<Boolean> hasPassed = new ArrayList<>();
+            long timeNanos = holder.getTimeNanos();
+            double timeMS = holder.getTimeAsMS();
 
             extractMethodNames(methodNames, holder);
             processHasPassed(hasPassed, holder);
@@ -428,7 +434,9 @@ public class SolutionTestSolver implements Supplier<TestResults> {
                 results,
                 solutions,
                 methodNames,
-                hasPassed
+                hasPassed,
+                timeNanos,
+                timeMS
             ));
         }
         globalSuccess = globalPassed == globalTotal;
