@@ -82,13 +82,13 @@ public final class SolveUtils {
             if(o.getClass().isArray()) {
                 if(o.getClass().getComponentType().isPrimitive()) {
                     if(o instanceof byte[]) result.append(Arrays.toString((byte[]) o));
-                    if(o instanceof short[]) result.append(Arrays.toString((short[]) o));
-                    if(o instanceof int[]) result.append(Arrays.toString((int[]) o));
-                    if(o instanceof long[]) result.append(Arrays.toString((long[]) o));
-                    if(o instanceof char[]) result.append(Arrays.toString((char[]) o));
-                    if(o instanceof float[]) result.append(Arrays.toString((float[]) o));
-                    if(o instanceof double[]) result.append(Arrays.toString((double[]) o));
-                    if(o instanceof boolean[]) result.append(Arrays.toString((boolean[]) o));
+                    else if(o instanceof short[]) result.append(Arrays.toString((short[]) o));
+                    else if(o instanceof int[]) result.append(Arrays.toString((int[]) o));
+                    else if(o instanceof long[]) result.append(Arrays.toString((long[]) o));
+                    else if(o instanceof char[]) result.append(Arrays.toString((char[]) o));
+                    else if(o instanceof float[]) result.append(Arrays.toString((float[]) o));
+                    else if(o instanceof double[]) result.append(Arrays.toString((double[]) o));
+                    else if(o instanceof boolean[]) result.append(Arrays.toString((boolean[]) o));
                 } else {
                     result.append(_quotedToString((Object[]) o));
                 }

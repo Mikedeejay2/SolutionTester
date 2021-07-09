@@ -106,17 +106,17 @@ public class TestResults {
         public String toString() {
             return "TestResult{" +
                 "success=" + success +
-                ", \ntotal=" + total +
-                ", \npassed=" + passed +
-                ", \nfailed=" + failed +
-                ", \nid='" + id + '\'' +
-                ", \ninputs=" + inputs +
-                ", \nresults=" + Arrays.toString(results) +
-                ", \nsolutions=" + solutions +
-                ", \nmethodNames=" + methodNames +
-                ", \nhasPassed=" + hasPassed +
-                ", \ntimeNanos=" + timeNanos +
-                ", \ntimeMS=" + timeMS +
+                ", total=" + total +
+                ", passed=" + passed +
+                ", failed=" + failed +
+                ", id='" + id + '\'' +
+                ", inputs=" + inputs +
+                ", results=" + Arrays.toString(results) +
+                ", solutions=" + solutions +
+                ", methodNames=" + methodNames +
+                ", hasPassed=" + hasPassed +
+                ", timeNanos=" + timeNanos +
+                ", timeMS=" + timeMS +
                 '}';
         }
     }
@@ -163,12 +163,12 @@ public class TestResults {
     @Override
     public String toString() {
         return "TestResults{" +
-            "\nsuccess=" + success +
-            ", \ntotal=" + total +
-            ", \npassed=" + passed +
-            ", \nfailed=" + failed +
-            ", \nids=" + ids +
-            ", \nresults=" + results +
+            "success=" + success +
+            ", total=" + total +
+            ", passed=" + passed +
+            ", failed=" + failed +
+            ", ids=" + ids +
+            ", results=" + results +
             '}';
     }
 }

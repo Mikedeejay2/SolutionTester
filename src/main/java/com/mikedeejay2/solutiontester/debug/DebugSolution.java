@@ -5,6 +5,11 @@ import com.mikedeejay2.solutiontester.annotations.Inputs;
 import com.mikedeejay2.solutiontester.annotations.Results;
 import com.mikedeejay2.solutiontester.annotations.Solution;
 
+/**
+ * A <strong>debug</strong> solution for testing the testing system features.
+ *
+ * This class should be ignored.
+ */
 public class DebugSolution implements SolutionTest
 {
     @Solution
