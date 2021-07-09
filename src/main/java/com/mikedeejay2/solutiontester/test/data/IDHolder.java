@@ -307,4 +307,24 @@ public class IDHolder {
     public List<Object> getSolutions() {
         return Collections.unmodifiableList(solutions);
     }
+
+    /**
+     * Auto-generated <code>toString()</code> method for debugging
+     *
+     * @return a string representation of the object.
+     */
+    @Override
+    public String toString()
+    {
+        return "IDHolder{" +
+            "id='" + id + '\'' +
+            ", resultsMethods=" + resultsMethods +
+            ", inputsMethods=" + inputsMethods +
+            ", solutionMethods=" + solutionMethods +
+            ", inputs=" + inputs +
+            ", results=" + results +
+            ", solutions=" + solutions +
+            ", timeNanos=" + timeNanos +
+            '}';
+    }
 }
