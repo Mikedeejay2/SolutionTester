@@ -8,26 +8,89 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.function.Consumer;
 
+/**
+ * Printer class for printing {@link TestResults} to a <code>Consumer&lt;String&gt;</code>.
+ * <p>
+ * The text formatting and layout of this printer class is inspired by the visuals of CodingBat's testing system.
+ */
 public class SolutionPrinter implements Consumer<TestResults> {
+    /**
+     * The character used for separating test results
+     */
     private static final char SEPARATION_CHAR = '│';
+
+    /**
+     * The arrow character used for decorative purposes
+     */
     private static final char ARROW_CHAR = '→';
+
+    /**
+     * String for when a result is successful
+     */
     private static final String RESULT_SUCCESS = "OK";
+
+    /**
+     * String for when a result has failed
+     */
     private static final String RESULT_FAILED = "X ";
+
+    /**
+     * The header text for the expected column
+     */
     private static final String EXPECTED_HEADER = "Expected";
+
+    /**
+     * The header text for the run column
+     */
     private static final String RUN_HEADER = "Run";
+
+    /**
+     * The final message for when the entire test is correct
+     */
     private static final String CORRECT_MESSAGE = "✓ All Correct";
+
+    /**
+     * The final message for when the entire test is incorrect
+     */
     private static final String INCORRECT_MESSAGE = "✖ Some tests failed";
+
+    /**
+     * Message used for printing the execution time.
+     * <p>
+     * {@link String#format(String, Object...)} is used to insert the time in ms, therefore the String must include
+     * a {@code %s} once in the String.
+     */
     private static final String TIME_MESSAGE = "Tests ran in %sms";
 
-    protected Consumer<String> printer;
+    /**
+     * The String <code>Consumer</code> for printing the {@link SolutionPrinter#currentMessage}
+     */
+    protected @Nullable Consumer<String> printer;
 
-    @Nullable
-    protected String finalMessage;
+    /**
+     * The current message of the previously generated String
+     */
+    protected @Nullable String currentMessage;
 
+    /**
+     * The current {@link TestResults} of the previously generated message
+     */
+    protected @Nullable TestResults currentResults;
+
+    /**
+     * Construct a new <code>SolutionPrinter</code>
+     *
+     * @param printer The printing <code>Consumer</code>. Can be null.
+     */
     public SolutionPrinter(@Nullable Consumer<String> printer) {
         this.printer = printer;
     }
 
+    /**
+     * Accept {@link TestResults} for generating a String and printing if {@link SolutionPrinter#printer} is not null.
+     *
+     * @param testResults The {@link TestResults} to process and print
+     */
     @Override
     public void accept(@NotNull TestResults testResults) {
         try {
@@ -39,6 +102,12 @@ public class SolutionPrinter implements Consumer<TestResults> {
         }
     }
 
+    /**
+     * Generate a full message from {@link TestResults}
+     *
+     * @param testResults The <code>TestResults</code> to generate a String for
+     * @return The generated String
+     */
     public String toFullMessage(@NotNull TestResults testResults) {
         final StringBuilder str = new StringBuilder();
         final List<String> strings = new ArrayList<>();
@@ -50,9 +119,18 @@ public class SolutionPrinter implements Consumer<TestResults> {
         for(String string : strings) {
             str.append('\n').append(string);
         }
-        return str.toString();
+        currentMessage = str.toString();
+        currentResults = testResults;
+        return currentMessage;
     }
 
+    /**
+     * Generate a message from a single {@link TestResults.TestResult}
+     *
+     * @param testResult The <code>TestResult</code> to generate a String for
+     * @param appendID Whether to append the ID to the message or not. ID does not matter if IDs are not being used.
+     * @return The generated String
+     */
     public String toMessage(@NotNull final TestResults.TestResult testResult, final boolean appendID) {
         final List<String> expected = new ArrayList<>();
         final List<String> run = new ArrayList<>();
@@ -197,10 +275,10 @@ public class SolutionPrinter implements Consumer<TestResults> {
 
     @Override
     public String toString() {
-        return finalMessage;
+        return currentMessage;
     }
 
-    public @Nullable String getFinalMessage() {
-        return finalMessage;
+    public @Nullable String getCurrentMessage() {
+        return currentMessage;
     }
 }

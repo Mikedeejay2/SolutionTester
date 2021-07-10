@@ -1,5 +1,6 @@
 package com.mikedeejay2.solutiontester.test.data;
 
+import com.mikedeejay2.solutiontester.test.SolutionPrinter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -127,14 +128,7 @@ public class TestResults {
      */
     @Override
     public String toString() {
-        return "TestResults{" +
-            "success=" + success +
-            ", total=" + total +
-            ", passed=" + passed +
-            ", failed=" + failed +
-            ", ids=" + ids +
-            ", results=" + results +
-            '}';
+        return new SolutionPrinter(null).toFullMessage(this);
     }
 
     /**
