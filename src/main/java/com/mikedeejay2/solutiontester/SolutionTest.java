@@ -72,7 +72,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * ✓ All Correct
  * </pre>
  * For this example as a class, see
- * <a href="https://github.com/Mikedeejay2/SolutionTesterExample/blob/master/src/main/java/com/mikedeejay2/example/ExampleSolution.java">ExampleSolution.java</a>
+ * <a href="https://github.com/Mikedeejay2/SolutionTesterExample/blob/master/src/main/java/com/mikedeejay2/example/ExampleSolution.java">ExampleSolution</a>
  * <p>
  * If needed, an ID system is available with all annotations wherein IDs can be specified to specific
  * annotations allowing for multiple separate tests to occur in the same class. This is useful for cases where multiple

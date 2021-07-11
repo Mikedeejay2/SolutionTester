@@ -1,7 +1,5 @@
 package com.mikedeejay2.solutiontester;
 
-import com.mikedeejay2.solutiontester.example.ExampleSolution;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -25,7 +23,7 @@ import java.lang.annotation.Target;
  * also be matching at each input index according to the data type requested by the solution method at the given
  * argument index.
  * <p>
- * Example code, part of {@link ExampleSolution}:
+ * Example code, part of <a href="https://github.com/Mikedeejay2/SolutionTesterExample/blob/master/src/main/java/com/mikedeejay2/example/ExampleSolution.java">ExampleSolution</a>:
  * <pre>
  *  &#064;Inputs
  *  public Object[][] inputs() {
