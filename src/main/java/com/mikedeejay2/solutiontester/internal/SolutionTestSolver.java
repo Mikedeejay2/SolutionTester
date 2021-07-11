@@ -5,7 +5,7 @@ import com.mikedeejay2.solutiontester.internal.data.TestResults;
 import com.mikedeejay2.solutiontester.internal.data.AnnotatedMethod;
 import com.mikedeejay2.solutiontester.internal.data.IDHolder;
 import com.mikedeejay2.solutiontester.internal.util.SolveUtils;
-import com.sun.istack.internal.NotNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

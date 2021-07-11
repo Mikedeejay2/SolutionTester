@@ -1,6 +1,7 @@
 package com.mikedeejay2.solutiontester.internal.data;
 
-import com.sun.istack.internal.NotNull;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
