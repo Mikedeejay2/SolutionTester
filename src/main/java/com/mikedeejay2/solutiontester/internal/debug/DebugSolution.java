@@ -1,9 +1,6 @@
-package com.mikedeejay2.solutiontester.debug;
+package com.mikedeejay2.solutiontester.internal.debug;
 
-import com.mikedeejay2.solutiontester.SolutionTest;
-import com.mikedeejay2.solutiontester.annotations.Inputs;
-import com.mikedeejay2.solutiontester.annotations.Results;
-import com.mikedeejay2.solutiontester.annotations.Solution;
+import com.mikedeejay2.solutiontester.*;
 
 /**
  * A <strong>debug</strong> solution for testing the testing system features.

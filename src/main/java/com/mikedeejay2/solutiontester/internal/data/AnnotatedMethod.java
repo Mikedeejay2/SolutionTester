@@ -1,8 +1,8 @@
-package com.mikedeejay2.solutiontester.test.data;
+package com.mikedeejay2.solutiontester.internal.data;
 
-import com.mikedeejay2.solutiontester.annotations.Inputs;
-import com.mikedeejay2.solutiontester.annotations.Results;
-import com.mikedeejay2.solutiontester.annotations.Solution;
+import com.mikedeejay2.solutiontester.Inputs;
+import com.mikedeejay2.solutiontester.Results;
+import com.mikedeejay2.solutiontester.Solution;
 import com.sun.istack.internal.NotNull;
 import org.jetbrains.annotations.Nullable;
 

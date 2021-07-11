@@ -1,6 +1,6 @@
-package com.mikedeejay2.solutiontester.annotations;
+package com.mikedeejay2.solutiontester;
 
-import com.mikedeejay2.solutiontester.debug.ExampleSolution;
+import com.mikedeejay2.solutiontester.example.ExampleSolution;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -1,6 +1,6 @@
-package com.mikedeejay2.solutiontester.debug;
+package com.mikedeejay2.solutiontester.internal.debug;
 
-import com.mikedeejay2.solutiontester.test.SolutionTester;
+import com.mikedeejay2.solutiontester.internal.SolutionTester;
 
 /**
  * A simple <strong>debug</strong> main class for testing solutions outside of JUnit.

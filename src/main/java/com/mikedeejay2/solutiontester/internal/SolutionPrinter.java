@@ -1,7 +1,7 @@
-package com.mikedeejay2.solutiontester.test;
+package com.mikedeejay2.solutiontester.internal;
 
-import com.mikedeejay2.solutiontester.test.data.TestResults;
-import com.mikedeejay2.solutiontester.util.SolveUtils;
+import com.mikedeejay2.solutiontester.internal.data.TestResults;
+import com.mikedeejay2.solutiontester.internal.util.SolveUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -22,42 +22,42 @@ public class SolutionPrinter implements Consumer<TestResults> {
     /**
      * The character used for separating test results
      */
-    private static final char SEPARATION_CHAR = '│';
+    protected static final char SEPARATION_CHAR = '│';
 
     /**
      * The arrow character used for decorative purposes
      */
-    private static final char ARROW_CHAR = '→';
+    protected static final char ARROW_CHAR = '→';
 
     /**
      * String for when a result is successful
      */
-    private static final String RESULT_SUCCESS = "OK";
+    protected static final String RESULT_SUCCESS = "OK";
 
     /**
      * String for when a result has failed
      */
-    private static final String RESULT_FAILED = "X ";
+    protected static final String RESULT_FAILED = "X ";
 
     /**
      * The header text for the expected column
      */
-    private static final String EXPECTED_HEADER = "Expected";
+    protected static final String EXPECTED_HEADER = "Expected";
 
     /**
      * The header text for the run column
      */
-    private static final String RUN_HEADER = "Run";
+    protected static final String RUN_HEADER = "Run";
 
     /**
      * The final message for when the entire test is correct
      */
-    private static final String CORRECT_MESSAGE = "✓ All Correct";
+    protected static final String CORRECT_MESSAGE = "✓ All Correct";
 
     /**
      * The final message for when the entire test is incorrect
      */
-    private static final String INCORRECT_MESSAGE = "✖ Some tests failed";
+    protected static final String INCORRECT_MESSAGE = "✖ Some tests failed";
 
     /**
      * Message used for printing the execution time.
@@ -65,7 +65,7 @@ public class SolutionPrinter implements Consumer<TestResults> {
      * {@link String#format(String, Object...)} is used to insert the time in ms, therefore the String must include
      * a {@code %s} once in the String.
      */
-    private static final String TIME_MESSAGE = "Tests ran in %sms";
+    protected static final String TIME_MESSAGE = "Tests ran in %sms";
 
     /**
      * The String <code>Consumer</code> for printing the {@link SolutionPrinter#currentMessage}

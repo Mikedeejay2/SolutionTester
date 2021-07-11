@@ -1,10 +1,10 @@
-package com.mikedeejay2.solutiontester.test;
+package com.mikedeejay2.solutiontester.internal;
 
 import com.mikedeejay2.solutiontester.SolutionTest;
-import com.mikedeejay2.solutiontester.test.data.AnnotatedMethod;
-import com.mikedeejay2.solutiontester.test.data.IDHolder;
-import com.mikedeejay2.solutiontester.test.data.TestResults;
-import com.mikedeejay2.solutiontester.util.SolveUtils;
+import com.mikedeejay2.solutiontester.internal.data.TestResults;
+import com.mikedeejay2.solutiontester.internal.data.AnnotatedMethod;
+import com.mikedeejay2.solutiontester.internal.data.IDHolder;
+import com.mikedeejay2.solutiontester.internal.util.SolveUtils;
 import com.sun.istack.internal.NotNull;
 
 import java.lang.reflect.InvocationTargetException;
@@ -25,27 +25,27 @@ public class SolutionTestSolver implements Supplier<TestResults> {
     /**
      * String to identify all IDs
      */
-    private static final String ALL_IDENTIFIER = "%all%";
+    protected static final String ALL_IDENTIFIER = "%all%";
 
     /**
      * The {@link SolutionTest} being tested
      */
-    private final SolutionTest test;
+    protected final SolutionTest test;
 
     /**
      * The solution test <code>Class</code> being tested
      */
-    private Class<? extends SolutionTest> solutionClass;
+    protected Class<? extends SolutionTest> solutionClass;
 
     /**
      * The list of {@link AnnotatedMethod} of the {@link SolutionTestSolver#solutionClass}
      */
-    private final List<AnnotatedMethod> annotatedMethods;
+    protected final List<AnnotatedMethod> annotatedMethods;
 
     /**
      * The compiled list of all IDs used in the {@link SolutionTestSolver#solutionClass}
      */
-    private final Map<String, IDHolder> ids;
+    protected final Map<String, IDHolder> ids;
 
     /**
      * Construct a new <code>SolutionTestSolver</code>

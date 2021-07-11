@@ -1,13 +1,10 @@
 package com.mikedeejay2.solutiontester;
 
-import com.mikedeejay2.solutiontester.annotations.Inputs;
-import com.mikedeejay2.solutiontester.annotations.Results;
-import com.mikedeejay2.solutiontester.annotations.Solution;
-import com.mikedeejay2.solutiontester.debug.ExampleSolution;
-import com.mikedeejay2.solutiontester.test.SolutionPrinter;
-import com.mikedeejay2.solutiontester.test.SolutionTestSolver;
-import com.mikedeejay2.solutiontester.test.SolutionTester;
-import com.mikedeejay2.solutiontester.test.data.TestResults;
+import com.mikedeejay2.solutiontester.example.ExampleSolution;
+import com.mikedeejay2.solutiontester.internal.SolutionPrinter;
+import com.mikedeejay2.solutiontester.internal.SolutionTestSolver;
+import com.mikedeejay2.solutiontester.internal.SolutionTester;
+import com.mikedeejay2.solutiontester.internal.data.TestResults;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.CompletableFuture;

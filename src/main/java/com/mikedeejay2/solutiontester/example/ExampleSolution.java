@@ -1,16 +1,17 @@
-package com.mikedeejay2.solutiontester.debug;
+package com.mikedeejay2.solutiontester.example;
 
+import com.mikedeejay2.solutiontester.Inputs;
+import com.mikedeejay2.solutiontester.Results;
+import com.mikedeejay2.solutiontester.Solution;
 import com.mikedeejay2.solutiontester.SolutionTest;
-import com.mikedeejay2.solutiontester.annotations.Inputs;
-import com.mikedeejay2.solutiontester.annotations.Results;
-import com.mikedeejay2.solutiontester.annotations.Solution;
 
 /**
  * A simple example test that adds two ints together.
  *
  * @author Mikedeejay2
  */
-public class ExampleSolution implements SolutionTest {
+public final class ExampleSolution implements SolutionTest
+{
     /*
      * Solution method that adds int a and int b together. Method will receive inputs from inputs method below and be
      * compared with the expected results from below as well.

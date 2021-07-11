@@ -1,6 +1,6 @@
-package com.mikedeejay2.solutiontester.util;
+package com.mikedeejay2.solutiontester.internal.util;
 
-import com.mikedeejay2.solutiontester.test.SolutionTester;
+import com.mikedeejay2.solutiontester.internal.SolutionTester;
 
 import java.util.Arrays;
 

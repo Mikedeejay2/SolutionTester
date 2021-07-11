@@ -1,6 +1,6 @@
-package com.mikedeejay2.solutiontester.test.data;
+package com.mikedeejay2.solutiontester.internal.data;
 
-import com.mikedeejay2.solutiontester.test.SolutionPrinter;
+import com.mikedeejay2.solutiontester.internal.SolutionPrinter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;

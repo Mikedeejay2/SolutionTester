@@ -1,7 +1,7 @@
-package com.mikedeejay2.solutiontester.test;
+package com.mikedeejay2.solutiontester.internal;
 
 import com.mikedeejay2.solutiontester.SolutionTest;
-import com.mikedeejay2.solutiontester.test.data.TestResults;
+import com.mikedeejay2.solutiontester.internal.data.TestResults;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

@@ -1,4 +1,4 @@
-package com.mikedeejay2.solutiontester.test.data;
+package com.mikedeejay2.solutiontester.internal.data;
 
 import com.sun.istack.internal.NotNull;
 
