@@ -1,6 +1,5 @@
 package com.mikedeejay2.solutiontester;
 
-import com.mikedeejay2.solutiontester.example.ExampleSolution;
 import com.mikedeejay2.solutiontester.internal.SolutionPrinter;
 import com.mikedeejay2.solutiontester.internal.SolutionTestSolver;
 import com.mikedeejay2.solutiontester.internal.SolutionTester;
@@ -72,7 +71,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * ✓ All Correct
  * </pre>
- * For this example as a class, see {@link ExampleSolution}
+ * For this example as a class, see
+ * <a href="https://github.com/Mikedeejay2/SolutionTesterExample/blob/master/src/main/java/com/mikedeejay2/example/ExampleSolution.java">ExampleSolution.java</a>
  * <p>
  * If needed, an ID system is available with all annotations wherein IDs can be specified to specific
  * annotations allowing for multiple separate tests to occur in the same class. This is useful for cases where multiple
@@ -97,6 +97,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *     </li>
  * </ul>
  *
+ * @see <a href="https://github.com/Mikedeejay2/SolutionTester">Github Project Page</a>
  * @author Mikedeejay2
  * @since 1.0.0
  */
