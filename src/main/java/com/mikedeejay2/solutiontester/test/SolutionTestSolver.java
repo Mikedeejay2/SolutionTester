@@ -12,14 +12,47 @@ import java.lang.reflect.Method;
 import java.util.*;
 import java.util.function.Supplier;
 
+/**
+ * Test solver for {@link SolutionTest}s. Used to generate a {@link TestResults} for further processing and analyzing.
+ * See {@link SolutionPrinter} for printing {@link TestResults}.
+ * <p>
+ * Use {@link SolutionTestSolver#get()} to generate {@link TestResults}
+ *
+ * @author Mikedeejay2
+ * @since 1.0.0
+ */
 public class SolutionTestSolver implements Supplier<TestResults> {
+    /**
+     * String to identify all IDs
+     */
     private static final String ALL_IDENTIFIER = "%all%";
 
+    /**
+     * The {@link SolutionTest} being tested
+     */
     private final SolutionTest test;
+
+    /**
+     * The solution test <code>Class</code> being tested
+     */
     private Class<? extends SolutionTest> solutionClass;
+
+    /**
+     * The list of {@link AnnotatedMethod} of the {@link SolutionTestSolver#solutionClass}
+     */
     private final List<AnnotatedMethod> annotatedMethods;
+
+    /**
+     * The compiled list of all IDs used in the {@link SolutionTestSolver#solutionClass}
+     */
     private final Map<String, IDHolder> ids;
 
+    /**
+     * Construct a new <code>SolutionTestSolver</code>
+     *
+     * @param test The {@link SolutionTest} to be tested
+     * @since 1.0.0
+     */
     public SolutionTestSolver(@NotNull SolutionTest test) {
         this.test = test;
         this.solutionClass = null;
@@ -27,6 +60,17 @@ public class SolutionTestSolver implements Supplier<TestResults> {
         this.ids = new LinkedHashMap<>();
     }
 
+    /**
+     * Get {@link TestResults}. This method generates a new {@link TestResults} each time, so computation time should
+     * be considered when calling this method.
+     * <p>
+     * Computation time for this method can be a few milliseconds or more since a large amount of reflection is used to
+     * collect all data from the {@link SolutionTest} and invoke solution methods. In Intellij Idea, JUnit tests show
+     * the relatively how much time this method takes, the average being 20-30ms.
+     *
+     * @return The generated <code>TestResults</code>
+     * @since 1.0.0
+     */
     @Override
     public TestResults get() {
         try {
@@ -37,6 +81,14 @@ public class SolutionTestSolver implements Supplier<TestResults> {
         }
     }
 
+    /**
+     * Solve the given {@link SolutionTest} and create a {@link TestResults}
+     *
+     * @return The generated <code>TestResults</code>
+     * @throws InvocationTargetException If a reflected method throws and exception
+     * @throws IllegalAccessException    If reflection tries to call an inaccessible method
+     * @since 1.0.0
+     */
     private TestResults solve() throws InvocationTargetException, IllegalAccessException {
         // COLLECTION STAGE 1
         collectSolutionClass();
@@ -66,10 +118,16 @@ public class SolutionTestSolver implements Supplier<TestResults> {
         return toTestResults();
     }
 
+    /**
+     * Collect the solution class from the test object.
+     */
     private void collectSolutionClass() {
         this.solutionClass = test.getClass();
     }
 
+    /**
+     * Collect all {@link AnnotatedMethod}s from the solution's class.
+     */
     private void collectAnnotatedMethods() {
         for(Method method : solutionClass.getDeclaredMethods()) {
             if(!method.isAccessible()) method.setAccessible(true);
@@ -80,15 +138,18 @@ public class SolutionTestSolver implements Supplier<TestResults> {
         }
     }
 
+    /**
+     * Collect all {@link IDHolder}s from the <code>AnnotatedMethods</code>.
+     */
     private void collectIDs() {
         for(AnnotatedMethod method : annotatedMethods) {
             if(method.isInputs()) {
                 List<String> idList = method.getInputsIDs();
-                addIDIfNotPresent(method, idList, SolverInputType.INPUTS);
+                addIDIfNotPresent(method, idList, AnnotatedMethod.Type.INPUTS);
             }
             if(method.isResults()) {
                 List<String> idList = method.getResultsIDs();
-                addIDIfNotPresent(method, idList, SolverInputType.RESULTS);
+                addIDIfNotPresent(method, idList, AnnotatedMethod.Type.RESULTS);
             }
         }
         for(AnnotatedMethod method : annotatedMethods) {
@@ -110,13 +171,18 @@ public class SolutionTestSolver implements Supplier<TestResults> {
                     }
                 } else {
                     for(String[] idArr : idList) {
-                        addIDIfNotPresent(method, idArr, SolverInputType.SOLUTION);
+                        addIDIfNotPresent(method, idArr, AnnotatedMethod.Type.SOLUTION);
                     }
                 }
             }
         }
     }
 
+    /**
+     * Validate the current state of all annotations.
+     *
+     * @param method The reference {@link AnnotatedMethod}
+     */
     private void validateAnnotations(AnnotatedMethod method) {
         int test = 0;
         if(method.isInputs()) ++test;
@@ -150,6 +216,11 @@ public class SolutionTestSolver implements Supplier<TestResults> {
         }
     }
 
+    /**
+     * Validate the current state of an {@link AnnotatedMethod}.
+     *
+     * @param annotatedMethod The {@link AnnotatedMethod} reference
+     */
     private void validateMethods(AnnotatedMethod annotatedMethod) {
         Method method = annotatedMethod.getMethod();
         Class<?> returnType = method.getReturnType();
@@ -190,6 +261,9 @@ public class SolutionTestSolver implements Supplier<TestResults> {
         }
     }
 
+    /**
+     * Validate that IDs exist and the solver isn't attempting to operate on a blank test.
+     */
     private void validateIDsFilled() {
         if(ids.isEmpty()) {
             throw new IllegalArgumentException(String.format(
@@ -200,6 +274,11 @@ public class SolutionTestSolver implements Supplier<TestResults> {
         }
     }
 
+    /**
+     * Validate the results of a single {@link IDHolder}.
+     *
+     * @param holder The reference {@link IDHolder}
+     */
     private void validateSingleResults(IDHolder holder) {
         if(holder.getResults().size() > 1) {
             throw new IllegalArgumentException(String.format(
@@ -210,6 +289,11 @@ public class SolutionTestSolver implements Supplier<TestResults> {
         }
     }
 
+    /**
+     * Validate that there are no missing methods or annotations.
+     *
+     * @param holder The reference {@link IDHolder}
+     */
     private void validateNoMissing(IDHolder holder){
         if(holder.getInputsMethods().isEmpty()) {
             throw new IllegalArgumentException(String.format(
@@ -231,6 +315,13 @@ public class SolutionTestSolver implements Supplier<TestResults> {
         }
     }
 
+    /**
+     * Collect all inputs of an {@link IDHolder}.
+     *
+     * @param holder                     The reference {@link IDHolder}
+     * @throws InvocationTargetException If a reflected method throws and exception
+     * @throws IllegalAccessException    If reflection tries to call an inaccessible method
+     */
     private void collectInputs(IDHolder holder) throws InvocationTargetException, IllegalAccessException {
         for(AnnotatedMethod annotatedMethod : holder.getInputsMethods()) {
             Object[][] result = (Object[][]) annotatedMethod.getMethod().invoke(test);
@@ -238,6 +329,13 @@ public class SolutionTestSolver implements Supplier<TestResults> {
         }
     }
 
+    /**
+     * Collect all results of an {@link IDHolder}
+     *
+     * @param holder                     The reference {@link IDHolder}
+     * @throws InvocationTargetException If a reflected method throws and exception
+     * @throws IllegalAccessException    If reflection tries to call an inaccessible method
+     */
     private void collectResults(IDHolder holder) throws InvocationTargetException, IllegalAccessException {
         for(AnnotatedMethod annotatedMethod : holder.getResultsMethods()) {
             Object[] result = (Object[]) annotatedMethod.getMethod().invoke(test);
@@ -245,6 +343,11 @@ public class SolutionTestSolver implements Supplier<TestResults> {
         }
     }
 
+    /**
+     * Validate the array lengths of inputs of an {@link IDHolder}
+     *
+     * @param holder The reference {@link IDHolder}
+     */
     private void validateInputsLength(IDHolder holder) {
         Object[] results = holder.getResults().get(0);
         List<Object[][]> inputs = holder.getInputs();
@@ -280,6 +383,11 @@ public class SolutionTestSolver implements Supplier<TestResults> {
         }
     }
 
+    /**
+     * Validate the return data types of a {@link IDHolder}
+     *
+     * @param holder The reference {@link IDHolder}
+     */
     private void validateReturnTypes(IDHolder holder) {
         Object[] results = holder.getResults().get(0);
         Class<?> solutionReturnType = null;
@@ -317,6 +425,11 @@ public class SolutionTestSolver implements Supplier<TestResults> {
         }
     }
 
+    /**
+     * Validate the parameter data types of the inputs of an {@link IDHolder}.
+     *
+     * @param holder The reference {@link IDHolder}
+     */
     private void validateParameterTypes(IDHolder holder) {
         Class<?>[] solutionParameterTypes = null;
         for(AnnotatedMethod solutionAnnoMethod : holder.getSolutionMethods()) {
@@ -371,6 +484,13 @@ public class SolutionTestSolver implements Supplier<TestResults> {
         }
     }
 
+    /**
+     * Collect the solutions of an {@link IDHolder}.
+     *
+     * @param holder                     The reference {@link IDHolder}
+     * @throws InvocationTargetException If a reflected method throws and exception
+     * @throws IllegalAccessException    If reflection tries to call an inaccessible method
+     */
     private void collectSolutions(IDHolder holder) throws InvocationTargetException, IllegalAccessException {
         List<AnnotatedMethod> solutionMethods = holder.getSolutionMethods();
         List<Object[][]> inputs = holder.getInputs();
@@ -389,6 +509,11 @@ public class SolutionTestSolver implements Supplier<TestResults> {
         }
     }
 
+    /**
+     * Convert all collected data to a {@link TestResults} object.
+     *
+     * @return The generated {@link TestResults}
+     */
     private TestResults toTestResults() {
         boolean globalSuccess;
         int globalTotal = 0;
@@ -450,6 +575,12 @@ public class SolutionTestSolver implements Supplier<TestResults> {
         );
     }
 
+    /**
+     * Process whether each test has passed or not.
+     *
+     * @param hasPassed The list of booleans to add to
+     * @param holder    The reference {@link IDHolder}
+     */
     private void processHasPassed(List<Boolean> hasPassed, IDHolder holder) {
         Object[] curResults = holder.getResults().get(0);
         List<Object> curSolutions = holder.getSolutions();
@@ -461,37 +592,52 @@ public class SolutionTestSolver implements Supplier<TestResults> {
         }
     }
 
+    /**
+     * Extract the names of all methods tested.
+     *
+     * @param methodNames The list of method names to add to
+     * @param holder      The reference {@link IDHolder}
+     */
     private void extractMethodNames(List<String> methodNames, IDHolder holder) {
         for(AnnotatedMethod solutionMethod : holder.getSolutionMethods()) {
             methodNames.add(solutionMethod.getMethod().getName());
         }
     }
 
-    private void extractSolutions(Map<String, List<Object>> solutions, IDHolder holder) {
-        solutions.put(holder.getId(), holder.getSolutions());
-    }
-
-    private void extractResults(Map<String, Object[]> results, IDHolder holder) {
-        results.put(holder.getId(), holder.getResults().get(0));
-    }
-
-    private void extractInputs(List<Object[][]> inputs, IDHolder holder) {
-        inputs.addAll(holder.getInputs());
-    }
-
-    private void addIDIfNotPresent(AnnotatedMethod method, List<String> idList, SolverInputType type) {
+    /**
+     * Add an ID to an the <code>idList</code> if not currently present
+     *
+     * @param method The reference {@link AnnotatedMethod}
+     * @param idList The list of IDs to add
+     * @param type   The {@link AnnotatedMethod.Type} of the method
+     */
+    private void addIDIfNotPresent(AnnotatedMethod method, List<String> idList, AnnotatedMethod.Type type) {
         for(String id : idList) {
             addIDIfNotPresent(method, id, type);
         }
     }
 
-    private void addIDIfNotPresent(AnnotatedMethod method, String[] idArr, SolverInputType type) {
+    /**
+     * Add an ID to an the <code>idList</code> if not currently present
+     *
+     * @param method The reference {@link AnnotatedMethod}
+     * @param idArr  The array of IDs to add
+     * @param type   The {@link AnnotatedMethod.Type} of the method
+     */
+    private void addIDIfNotPresent(AnnotatedMethod method, String[] idArr, AnnotatedMethod.Type type) {
         for(String id : idArr) {
             addIDIfNotPresent(method, id, type);
         }
     }
 
-    private void addIDIfNotPresent(AnnotatedMethod method, String id, SolverInputType type) {
+    /**
+     * Add an ID to an the <code>idList</code> if not currently present
+     *
+     * @param method The reference {@link AnnotatedMethod}
+     * @param id     The ID to add
+     * @param type   The {@link AnnotatedMethod.Type} of the method
+     */
+    private void addIDIfNotPresent(AnnotatedMethod method, String id, AnnotatedMethod.Type type) {
         validateID(id);
         IDHolder holder = ids.get(id);
         switch(type) {
@@ -507,6 +653,11 @@ public class SolutionTestSolver implements Supplier<TestResults> {
         }
     }
 
+    /**
+     * Ensure that an ID exists in an {@link SolutionTestSolver#ids}. If it doesn't exist, add it.
+     *
+     * @param id The ID to validate
+     */
     private void validateID(String id) {
         if(!ids.containsKey(id)) {
             ids.put(id, new IDHolder(id));

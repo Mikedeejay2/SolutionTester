@@ -1,5 +1,7 @@
 package com.mikedeejay2.solutiontester.annotations;
 
+import com.mikedeejay2.solutiontester.debug.ExampleSolution;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -19,6 +21,17 @@ import java.lang.annotation.Target;
  * <p>
  * The data type of the returned Objects held in the <code>Object[]</code> array should match the return data type of the
  * solution method
+ * <p>
+ * Example code, part of {@link ExampleSolution}:
+ * <pre>
+ *  &#064;Results
+ *  public Object[] results() {
+ *      return new Object[]{ 4, 3, 10 };
+ *  }
+ * </pre>
+ *
+ * @author Mikedeejay2
+ * @since 1.0.0
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
@@ -27,6 +40,7 @@ public @interface Results {
      * Optional ID that can be specified if there are multiple different tests inside of the same class.
      *
      * @return The ID of this annotation
+     * @since 1.0.0
      */
     String id() default "default";
 }

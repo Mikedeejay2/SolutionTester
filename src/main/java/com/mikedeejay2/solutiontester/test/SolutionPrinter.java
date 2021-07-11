@@ -14,6 +14,9 @@ import java.util.function.Consumer;
  * Printer class for printing {@link TestResults} to a <code>Consumer&lt;String&gt;</code>.
  * <p>
  * The text formatting and layout of this printer class is inspired by the visuals of CodingBat's testing system.
+ *
+ * @author Mikedeejay2
+ * @since 1.0.0
  */
 public class SolutionPrinter implements Consumer<TestResults> {
     /**
@@ -83,6 +86,7 @@ public class SolutionPrinter implements Consumer<TestResults> {
      * Construct a new <code>SolutionPrinter</code>
      *
      * @param printer The printing <code>Consumer</code>. Can be null.
+     * @since 1.0.0
      */
     public SolutionPrinter(@Nullable Consumer<String> printer) {
         this.printer = printer;
@@ -92,6 +96,7 @@ public class SolutionPrinter implements Consumer<TestResults> {
      * Accept {@link TestResults} for generating a String and printing if {@link SolutionPrinter#printer} is not null.
      *
      * @param testResults The {@link TestResults} to process and print
+     * @since 1.0.0
      */
     @Override
     public void accept(@NotNull final TestResults testResults) {
@@ -109,6 +114,7 @@ public class SolutionPrinter implements Consumer<TestResults> {
      *
      * @param testResults The <code>TestResults</code> to generate a String for
      * @return The generated String
+     * @since 1.0.0
      */
     public String toFullMessage(@NotNull final TestResults testResults) {
         final StringBuilder str = new StringBuilder();
@@ -132,6 +138,7 @@ public class SolutionPrinter implements Consumer<TestResults> {
      * @param testResult The <code>TestResult</code> to generate a String for
      * @param appendID   Whether to append the ID to the message or not. ID does not matter if IDs are not being used.
      * @return The generated String
+     * @since 1.0.0
      */
     public String toMessage(@NotNull final TestResults.TestResult testResult, final boolean appendID) {
         final List<String> expected = new ArrayList<>();
@@ -327,6 +334,7 @@ public class SolutionPrinter implements Consumer<TestResults> {
      * not been called yet.
      *
      * @return The last generated String
+     * @since 1.0.0
      */
     @Override
     public String toString() {
@@ -338,6 +346,7 @@ public class SolutionPrinter implements Consumer<TestResults> {
      * not been called yet.
      *
      * @return The last generated String
+     * @since 1.0.0
      */
     public @Nullable String getCurrentMessage() {
         return currentMessage;

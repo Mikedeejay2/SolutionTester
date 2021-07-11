@@ -3,7 +3,6 @@ package com.mikedeejay2.solutiontester.test.data;
 import com.mikedeejay2.solutiontester.annotations.Inputs;
 import com.mikedeejay2.solutiontester.annotations.Results;
 import com.mikedeejay2.solutiontester.annotations.Solution;
-import com.mikedeejay2.solutiontester.test.SolverInputType;
 import com.sun.istack.internal.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -16,6 +15,9 @@ import java.util.Objects;
 /**
  * Holder for an annotated method. Contains extra information and data about the method including what annotation is
  * appended to it and its IDs.
+ *
+ * @author Mikedeejay2
+ * @since 1.0.0
  */
 public class AnnotatedMethod {
     /**
@@ -66,11 +68,11 @@ public class AnnotatedMethod {
     protected boolean isSolution;
 
     /**
-     * The {@link SolverInputType} of this <code>Method</code>.
+     * The {@link Type} of this <code>Method</code>.
      * <p>
      * Null if not {@link AnnotatedMethod#isFilled}
      */
-    protected @Nullable SolverInputType type;
+    protected @Nullable AnnotatedMethod.Type type;
 
     /**
      * The reference count of this <code>Method</code>
@@ -112,17 +114,17 @@ public class AnnotatedMethod {
                 ++refCount;
                 isInputs = true;
                 inputsIDs.add(((Inputs) annotation).id());
-                type = SolverInputType.INPUTS;
+                type = Type.INPUTS;
             } else if(annotationType == Results.class) {
                 ++refCount;
                 isResults = true;
                 resultsIDs.add(((Results) annotation).id());
-                type = SolverInputType.RESULTS;
+                type = Type.RESULTS;
             } else if(annotationType == Solution.class) {
                 ++refCount;
                 isSolution = true;
                 solutionIDs.add(((Solution) annotation).ids());
-                type = SolverInputType.SOLUTION;
+                type = Type.SOLUTION;
             }
         }
         this.isFilled = true;
@@ -190,13 +192,13 @@ public class AnnotatedMethod {
     }
 
     /**
-     * Get the {@link SolverInputType} of this <code>Method</code>.
+     * Get the {@link Type} of this <code>Method</code>.
      * <p>
      * Null if not {@link AnnotatedMethod#isFilled}
      *
      * @return The <code>SolverInputType</code>
      */
-    public @Nullable SolverInputType getType() {
+    public @Nullable AnnotatedMethod.Type getType() {
         return type;
     }
 
@@ -253,5 +255,16 @@ public class AnnotatedMethod {
             ", refCount=" + refCount +
             ", isFilled=" + isFilled +
             '}';
+    }
+
+    /**
+     * Enum for indicating what type of annotation an <code>AnnotatedMethod</code> is
+     */
+    public enum Type
+    {
+        INPUTS,
+        RESULTS,
+        SOLUTION,
+        ;
     }
 }

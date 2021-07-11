@@ -7,8 +7,7 @@ import com.mikedeejay2.solutiontester.test.SolutionTester;
  *
  * This class should be ignored.
  */
-public class DebugMain
-{
+public class DebugMain {
     /**
      * Debug main method
      *

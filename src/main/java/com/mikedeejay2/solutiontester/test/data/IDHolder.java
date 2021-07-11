@@ -6,6 +6,9 @@ import java.util.*;
 
 /**
  * Holds all data of an ID.
+ *
+ * @author Mikedeejay2
+ * @since 1.0.0
  */
 public class IDHolder {
     /**

@@ -14,15 +14,22 @@ import java.util.function.Function;
  * <p>
  * Use {@link SolutionTester#apply(SolutionTest)} for
  * inputting a <code>SolutionTest</code>.
+ *
+ * @author Mikedeejay2
+ * @since 1.0.0
  */
 public class SolutionTester implements Function<SolutionTest, CompletableFuture<TestResults>> {
     /**
      * The {@link SolutionPrinter} to use. Can be null if not needed.
+     *
+     * @since 1.0.0
      */
     protected @Nullable SolutionPrinter printer;
 
     /**
      * Construct a new <code>SolutionTester</code> with the default <code>PrintStream</code> of {@link System#out}
+     *
+     * @since 1.0.0
      */
     public SolutionTester() {
         this.printer = new SolutionPrinter(System.out::println);
@@ -32,6 +39,7 @@ public class SolutionTester implements Function<SolutionTest, CompletableFuture<
      * Construct a new <code>SolutionTester</code> with a {@link SolutionPrinter} instance
      *
      * @param printer The {@link SolutionPrinter} to use. Nullable.
+     * @since 1.0.0
      */
     public SolutionTester(@Nullable SolutionPrinter printer) {
         this.printer = printer;
@@ -55,6 +63,7 @@ public class SolutionTester implements Function<SolutionTest, CompletableFuture<
      *
      * @param solutionTest The <code>SolutionTest</code> to solve
      * @return The {@link CompletableFuture} of the {@link TestResults}
+     * @since 1.0.0
      */
     @Override
     public CompletableFuture<TestResults> apply(@NotNull final SolutionTest solutionTest) {
@@ -70,6 +79,7 @@ public class SolutionTester implements Function<SolutionTest, CompletableFuture<
      * Get the {@link SolutionPrinter} for this tester. Can be null.
      *
      * @return The <code>SolutionPrinter</code>
+     * @since 1.0.0
      */
     public @Nullable SolutionPrinter getPrinter() {
         return printer;
@@ -79,6 +89,7 @@ public class SolutionTester implements Function<SolutionTest, CompletableFuture<
      * Set the {@link SolutionPrinter} for this tester. Can be null.
      *
      * @param printer The new <code>SolutionPrinter</code>
+     * @since 1.0.0
      */
     public void setPrinter(@Nullable SolutionPrinter printer) {
         this.printer = printer;
@@ -88,6 +99,7 @@ public class SolutionTester implements Function<SolutionTest, CompletableFuture<
      * Gets result String if all processes have been completed
      *
      * @return Result String given that a printer exists and operations have finished
+     * @since 1.0.0
      */
     @Override
     public String toString() {

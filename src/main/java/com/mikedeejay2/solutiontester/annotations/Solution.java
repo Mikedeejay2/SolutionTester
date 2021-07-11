@@ -1,5 +1,7 @@
 package com.mikedeejay2.solutiontester.annotations;
 
+import com.mikedeejay2.solutiontester.debug.ExampleSolution;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -19,6 +21,17 @@ import java.lang.annotation.Target;
  * annotation such that <code>Inputs[0][0]</code> is the first argument of the first input and <code>Inputs[0][1]</code>
  * is the second argument of the second input, etc. Data types should also be matching at each input index according to
  * the data type requested by the solution method at the given argument index.
+ * <p>
+ * Example code, part of {@link ExampleSolution}:
+ * <pre>
+ *  &#064;Solution
+ *  public int addNums(int a, int b) {
+ *      return a + b;
+ *  }
+ * </pre>
+ *
+ * @author Mikedeejay2
+ * @since 1.0.0
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
@@ -28,6 +41,7 @@ public @interface Solution {
      * solutions run through all ids with the special ID placeholder <code>%all%</code>.
      *
      * @return The IDs of this annotation
+     * @since 1.0.0
      */
     String[] ids() default {"%all%"};
 }

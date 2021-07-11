@@ -10,8 +10,7 @@ import com.mikedeejay2.solutiontester.annotations.Solution;
  *
  * This class should be ignored.
  */
-public class DebugSolution implements SolutionTest
-{
+public class DebugSolution implements SolutionTest {
     @Solution
     public String[] combineStrNumGlobal(String str, int[][] num) {
         return new String[]{str + num[0][0]};

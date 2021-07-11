@@ -1,5 +1,7 @@
 package com.mikedeejay2.solutiontester.annotations;
 
+import com.mikedeejay2.solutiontester.debug.ExampleSolution;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -22,6 +24,17 @@ import java.lang.annotation.Target;
  * the first input and <code>Inputs[0][1]</code> is the second argument of the second input, etc. Data types should
  * also be matching at each input index according to the data type requested by the solution method at the given
  * argument index.
+ * <p>
+ * Example code, part of {@link ExampleSolution}:
+ * <pre>
+ *  &#064;Inputs
+ *  public Object[][] inputs() {
+ *      return new Object[][]{ {2, 2}, {1, 2}, {5, 5} };
+ *  }
+ * </pre>
+ *
+ * @author Mikedeejay2
+ * @since 1.0.0
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
@@ -30,6 +43,7 @@ public @interface Inputs {
      * Optional ID that can be specified if there are multiple different tests inside of the same class.
      *
      * @return The ID of this annotation
+     * @since 1.0.0
      */
     String id() default "default";
 }
