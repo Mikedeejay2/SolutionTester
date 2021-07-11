@@ -6,10 +6,9 @@ import com.mikedeejay2.solutiontester.annotations.Results;
 import com.mikedeejay2.solutiontester.annotations.Solution;
 
 /**
- * A simple example test that adds two ints together.\
+ * A simple example test that adds two ints together.
  *
  * @author Mikedeejay2
- * @since 1.0.0
  */
 public class ExampleSolution implements SolutionTest {
     /*
