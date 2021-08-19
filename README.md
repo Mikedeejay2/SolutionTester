@@ -52,7 +52,7 @@ The dependency for SolutionTester is:
 <dependency>
     <groupId>com.mikedeejay2</groupId>
     <artifactId>solutiontester</artifactId>
-    <version>1.1.0-SNAPSHOT</version>
+    <version>1.1.1-SNAPSHOT</version>
 </dependency>
 ```
 ### Notes
