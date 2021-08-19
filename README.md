@@ -60,3 +60,32 @@ Javadocs are included with the source code. If you're unsure about something, th
 Javadocs are not of help, my Discord information can be found on my [Github profile](https://github.com/Mikedeejay2).
 
 Developed in Intellij IDEA, compatibility with other IDEs is not ensured.
+
+### Changelog
+<table style="width: 100%">
+  <thead>
+    <th style="width: 20%">Date Released</th>
+    <th style="width: 20%">Version</th>
+    <th style="width: 60%">Changes</th>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="vertical-align: top">8/18/2021</td>
+      <td style="vertical-align: top"><b>1.1.0</b></td>
+      <td style="vertical-align: top">
+        <ul>
+          <li>Allow superclasses to declare testing methods</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top">7/11/2021</td>
+      <td style="vertical-align: top"><b>1.0.0</b></td>
+      <td style="vertical-align: top">
+        <ul>
+          <li>Initial release. Completely new system from previous code</li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
