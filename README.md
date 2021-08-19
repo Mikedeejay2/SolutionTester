@@ -70,6 +70,15 @@ Developed in Intellij IDEA, compatibility with other IDEs is not ensured.
   </thead>
   <tbody>
     <tr>
+      <td style="vertical-align: top">8/19/2021</td>
+      <td style="vertical-align: top"><b>1.1.1</b></td>
+      <td style="vertical-align: top">
+        <ul>
+          <li>Fix NullPointerException with null object during the printing process</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
       <td style="vertical-align: top">8/18/2021</td>
       <td style="vertical-align: top"><b>1.1.0</b></td>
       <td style="vertical-align: top">
