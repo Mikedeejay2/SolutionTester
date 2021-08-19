@@ -108,6 +108,7 @@ public final class SolveUtils {
      * @return The new quoted String if applicable
      */
     public static String quotedToString(Object obj) {
+        if(obj == null) return "null";
         StringBuilder result = new StringBuilder();
         if(obj.getClass().isArray()) {
             return _quotedToString((Object[]) obj);
