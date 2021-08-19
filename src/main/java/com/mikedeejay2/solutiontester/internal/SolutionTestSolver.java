@@ -33,17 +33,17 @@ public class SolutionTestSolver implements Supplier<TestResults> {
     protected final SolutionTest test;
 
     /**
-     * The solution test <code>Class</code> being tested
+     * The solution test <code>Classes</code> being tested
      */
-    protected Class<? extends SolutionTest> solutionClass;
+    protected Class<?>[] solutionClasses;
 
     /**
-     * The list of {@link AnnotatedMethod} of the {@link SolutionTestSolver#solutionClass}
+     * The list of {@link AnnotatedMethod} of the {@link SolutionTestSolver#solutionClasses}
      */
     protected final List<AnnotatedMethod> annotatedMethods;
 
     /**
-     * The compiled list of all IDs used in the {@link SolutionTestSolver#solutionClass}
+     * The compiled list of all IDs used in the {@link SolutionTestSolver#solutionClasses}
      */
     protected final Map<String, IDHolder> ids;
 
@@ -55,7 +55,7 @@ public class SolutionTestSolver implements Supplier<TestResults> {
      */
     public SolutionTestSolver(@NotNull SolutionTest test) {
         this.test = test;
-        this.solutionClass = null;
+        this.solutionClasses = null;
         this.annotatedMethods = new ArrayList<>();
         this.ids = new LinkedHashMap<>();
     }
@@ -91,7 +91,7 @@ public class SolutionTestSolver implements Supplier<TestResults> {
      */
     private TestResults solve() throws InvocationTargetException, IllegalAccessException {
         // COLLECTION STAGE 1
-        collectSolutionClass();
+        collectSolutionClasses();
         collectAnnotatedMethods();
         collectIDs();
         // VALIDATION STAGE 1
@@ -121,20 +121,28 @@ public class SolutionTestSolver implements Supplier<TestResults> {
     /**
      * Collect the solution class from the test object.
      */
-    private void collectSolutionClass() {
-        this.solutionClass = test.getClass();
+    private void collectSolutionClasses() {
+        List<Class<?>> classes = new ArrayList<>();
+        Class<?> currentClass = test.getClass();
+        while(currentClass.getSuperclass() != null) {
+            classes.add(currentClass);
+            currentClass = currentClass.getSuperclass();
+        }
+        this.solutionClasses = classes.toArray(new Class[0]);
     }
 
     /**
      * Collect all {@link AnnotatedMethod}s from the solution's class.
      */
     private void collectAnnotatedMethods() {
-        for(Method method : solutionClass.getDeclaredMethods()) {
-            if(!method.isAccessible()) method.setAccessible(true);
-            AnnotatedMethod annotatedMethod = new AnnotatedMethod(method);
-            annotatedMethod.fillAnnotations();
-            if(annotatedMethod.getRefCount() == 0) continue;
-            annotatedMethods.add(annotatedMethod);
+        for(Class<?> solutionClass : solutionClasses) {
+            for(Method method : solutionClass.getDeclaredMethods()) {
+                if(!method.isAccessible()) method.setAccessible(true);
+                AnnotatedMethod annotatedMethod = new AnnotatedMethod(method);
+                annotatedMethod.fillAnnotations();
+                if(annotatedMethod.getRefCount() == 0) continue;
+                annotatedMethods.add(annotatedMethod);
+            }
         }
     }
 
@@ -192,7 +200,7 @@ public class SolutionTestSolver implements Supplier<TestResults> {
             StringBuilder message = new StringBuilder();
             message.append(String.format(
                 "The method \"%s\" has too many type annotations in class \"%s\"",
-                method.getMethod().getName(), solutionClass.getName()));
+                method.getMethod().getName(), solutionClasses[0].getName()));
             if(test == 2) {
                 message.append("\nThe method has ");
                 int flag = 0;
@@ -230,7 +238,7 @@ public class SolutionTestSolver implements Supplier<TestResults> {
                 if(parameterTypes.length > 0) {
                     throw new IllegalArgumentException(String.format(
                         "The input method \"%s\" can not take parameters in class \"%s\"",
-                        annotatedMethod.getMethod().getName(), solutionClass.getName()
+                        annotatedMethod.getMethod().getName(), solutionClasses[0].getName()
                                                                     ));
                 }
                 if(!(returnType.isArray() && returnType.getComponentType().isArray())) {
@@ -238,7 +246,7 @@ public class SolutionTestSolver implements Supplier<TestResults> {
                         "The input method \"%s\" does not have the correct return type in class \"%s\"" +
                         "\nInput methods can only return a 2D array of objects (Object[][]), each index being a list of " +
                         "parameters to send to the solution methods",
-                        annotatedMethod.getMethod().getName(), solutionClass.getName()
+                        annotatedMethod.getMethod().getName(), solutionClasses[0].getName()
                                                                     ));
                 }
                 break;
@@ -246,7 +254,7 @@ public class SolutionTestSolver implements Supplier<TestResults> {
                 if(parameterTypes.length > 0) {
                     throw new IllegalArgumentException(String.format(
                         "The result method \"%s\" can not take parameters in class \"%s\"",
-                        annotatedMethod.getMethod().getName(), solutionClass.getName()
+                        annotatedMethod.getMethod().getName(), solutionClasses[0].getName()
                                                                     ));
                 }
                 if(!returnType.isArray()) {
@@ -254,7 +262,7 @@ public class SolutionTestSolver implements Supplier<TestResults> {
                         "The input method \"%s\" does not have the correct return type in class \"%s\"" +
                         "\nResult methods can only return an array of objects (Object[]), each index being an expected " +
                         "result of the solution methods",
-                        annotatedMethod.getMethod().getName(), solutionClass.getName()
+                        annotatedMethod.getMethod().getName(), solutionClasses[0].getName()
                                                                     ));
                 }
                 break;
@@ -269,7 +277,7 @@ public class SolutionTestSolver implements Supplier<TestResults> {
             throw new IllegalArgumentException(String.format(
                 "No IDs exist in class \"%s\", this is usually caused by attempting to run a unit test on a class with " +
                 "no testing methods",
-                solutionClass.getName()
+                solutionClasses[0].getName()
                                                             ));
         }
     }
@@ -284,7 +292,7 @@ public class SolutionTestSolver implements Supplier<TestResults> {
             throw new IllegalArgumentException(String.format(
                 "The ID \"%s\" has multiple results methods in class \"%s\"" +
                 "\nAn ID can only have a single results method linked to it",
-                holder.getId(), solutionClass.getName()
+                holder.getId(), solutionClasses[0].getName()
                                                             ));
         }
     }
@@ -298,19 +306,19 @@ public class SolutionTestSolver implements Supplier<TestResults> {
         if(holder.getInputsMethods().isEmpty()) {
             throw new IllegalArgumentException(String.format(
                 "The ID \"%s\" has no input methods in class \"%s\"",
-                holder.getId(), solutionClass.getName()
+                holder.getId(), solutionClasses[0].getName()
                                                             ));
         }
         if(holder.getResultsMethods().isEmpty()) {
             throw new IllegalArgumentException(String.format(
                 "The ID \"%s\" has no result methods in class \"%s\"",
-                holder.getId(), solutionClass.getName()
+                holder.getId(), solutionClasses[0].getName()
                                                             ));
         }
         if(holder.getSolutionMethods().isEmpty()) {
             throw new IllegalArgumentException(String.format(
                 "The ID \"%s\" has no solution methods in class \"%s\"",
-                holder.getId(), solutionClass.getName()
+                holder.getId(), solutionClasses[0].getName()
                                                             ));
         }
     }
@@ -356,27 +364,27 @@ public class SolutionTestSolver implements Supplier<TestResults> {
             if(input2d == null) {
                 throw new IllegalArgumentException(String.format(
                     "The ID \"%s\" has an input that returned null in class \"%s\"",
-                    holder.getId(), solutionClass.getName()
+                    holder.getId(), solutionClasses[0].getName()
                                                                 ));
             }
             if(input2d.length != results.length) {
                 throw new IllegalArgumentException(String.format(
                     "The ID \"%s\" has a set of inputs that does not set the size of the results in class \"%s\"",
-                    holder.getId(), solutionClass.getName()
+                    holder.getId(), solutionClasses[0].getName()
                                                                 ));
             }
             for(Object[] input1d : input2d) {
                 if(input1d == null) {
                     throw new IllegalArgumentException(String.format(
                         "The ID \"%s\" has a sub-input that returned null in class \"%s\"",
-                        holder.getId(), solutionClass.getName()
+                        holder.getId(), solutionClasses[0].getName()
                                                                     ));
                 }
                 if(previousLength == -1) previousLength = input1d.length;
                 if(input1d.length != previousLength) {
                     throw new IllegalArgumentException(String.format(
                         "The ID \"%s\" has a set of inputs that does not set the size of the results in class \"%s\"",
-                        holder.getId(), solutionClass.getName()
+                        holder.getId(), solutionClasses[0].getName()
                                                                     ));
                 }
             }
@@ -396,7 +404,7 @@ public class SolutionTestSolver implements Supplier<TestResults> {
             if(solutionReturnType != method.getMethod().getReturnType()) {
                 throw new IllegalArgumentException(String.format(
                     "The ID \"%s\" has mismatched solution return types in class \"%s\"",
-                    holder.getId(), solutionClass.getName()
+                    holder.getId(), solutionClasses[0].getName()
                                                                 ));
             }
             for(Object result : results) {
@@ -404,7 +412,7 @@ public class SolutionTestSolver implements Supplier<TestResults> {
                     if(solutionReturnType.isPrimitive()) {
                         throw new IllegalArgumentException(String.format(
                             "The ID \"%s\" has a result with an invalid null parameter type in class \"%s\"",
-                            holder.getId(), solutionClass.getName()
+                            holder.getId(), solutionClasses[0].getName()
                                                                         ));
                     }
                     continue;
@@ -413,12 +421,12 @@ public class SolutionTestSolver implements Supplier<TestResults> {
                 if(solutionReturnType.isArray() != resultClass.isArray()) {
                     throw new IllegalArgumentException(String.format(
                         "The ID \"%s\" has mismatched solution and result array return types in class \"%s\"",
-                        holder.getId(), solutionClass.getName()
+                        holder.getId(), solutionClasses[0].getName()
                                                                     ));
                 } else if(!SolveUtils.isInstance(solutionReturnType, resultClass)) {
                     throw new IllegalArgumentException(String.format(
                         "The ID \"%s\" has a result type that does not match the return type in class \"%s\"",
-                        holder.getId(), solutionClass.getName()
+                        holder.getId(), solutionClasses[0].getName()
                                                                     ));
                 }
             }
@@ -439,7 +447,7 @@ public class SolutionTestSolver implements Supplier<TestResults> {
             if(curParameterTypes.length != solutionParameterTypes.length) {
                 throw new IllegalArgumentException(String.format(
                     "The ID \"%s\" has solutions with different parameter lengths in class \"%s\"",
-                    holder.getId(), solutionClass.getName()
+                    holder.getId(), solutionClasses[0].getName()
                                                                 ));
             }
             for(int i = 0; i < solutionParameterTypes.length; ++i) {
@@ -448,7 +456,7 @@ public class SolutionTestSolver implements Supplier<TestResults> {
                 if(solutionParamType != curParamType) {
                     throw new IllegalArgumentException(String.format(
                         "The ID \"%s\" has mismatched parameter types for solutions in class \"%s\"",
-                        holder.getId(), solutionClass.getName()
+                        holder.getId(), solutionClasses[0].getName()
                                                                     ));
                 }
             }
@@ -458,7 +466,7 @@ public class SolutionTestSolver implements Supplier<TestResults> {
                 if(input1D.length != solutionParameterTypes.length) {
                     throw new IllegalArgumentException(String.format(
                         "The ID \"%s\" has an input with invalid parameter length in class \"%s\"",
-                        holder.getId(), solutionClass.getName()
+                        holder.getId(), solutionClasses[0].getName()
                                                                     ));
                 }
                 for(int i = 0; i < input1D.length; ++i) {
@@ -468,7 +476,7 @@ public class SolutionTestSolver implements Supplier<TestResults> {
                         if(expectedType.isPrimitive()) {
                             throw new IllegalArgumentException(String.format(
                                 "The ID \"%s\" has an input with invalid null parameter type in class \"%s\"",
-                                holder.getId(), solutionClass.getName()
+                                holder.getId(), solutionClasses[0].getName()
                                                                             ));
                         }
                         continue;
@@ -476,7 +484,7 @@ public class SolutionTestSolver implements Supplier<TestResults> {
                     if(!SolveUtils.isInstance(expectedType, input.getClass())) {
                         throw new IllegalArgumentException(String.format(
                             "The ID \"%s\" has an input with invalid parameter types in class \"%s\"",
-                            holder.getId(), solutionClass.getName()
+                            holder.getId(), solutionClasses[0].getName()
                                                                         ));
                     }
                 }
