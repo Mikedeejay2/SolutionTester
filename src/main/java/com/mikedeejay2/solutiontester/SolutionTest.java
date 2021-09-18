@@ -114,7 +114,8 @@ public interface SolutionTest
     default void testJUnit() throws ExecutionException, InterruptedException {
         CompletableFuture<TestResults> resultsFuture = _toTester().apply(this);
         TestResults results = resultsFuture.get();
-        assertTrue(results.success, "Some tests failed. View above for test results.");
+        boolean success = results != null && results.success;
+        assertTrue(success, "Some tests failed. View above for test results.");
     }
 
     /**
