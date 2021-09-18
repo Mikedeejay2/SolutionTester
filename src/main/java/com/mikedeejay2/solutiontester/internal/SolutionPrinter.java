@@ -99,9 +99,9 @@ public class SolutionPrinter implements Consumer<TestResults> {
      * @since 1.0.0
      */
     @Override
-    public void accept(@NotNull final TestResults testResults) {
+    public void accept(@Nullable final TestResults testResults) {
+        if(testResults == null) return;
         try {
-            Objects.requireNonNull(testResults, "TestResults cannot be null");
             String message = toFullMessage(testResults);
             printOut(message);
         } catch(Exception e) {
