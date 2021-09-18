@@ -52,7 +52,7 @@ The dependency for SolutionTester is:
 <dependency>
     <groupId>com.mikedeejay2</groupId>
     <artifactId>solutiontester</artifactId>
-    <version>1.1.1-SNAPSHOT</version>
+    <version>1.1.2</version>
 </dependency>
 ```
 ### Notes
@@ -70,17 +70,29 @@ Developed in Intellij IDEA, compatibility with other IDEs is not ensured.
   </thead>
   <tbody>
     <tr>
+      <td style="vertical-align: top">9/17/2021</td>
+      <td style="vertical-align: top"><b>1.1.2</b></td>
+      <td style="vertical-align: top">
+        <ul>
+          <li>Fix NullPointerException during the scoring process</li>
+          <li>Simplify printed stack trace when errors occur</li>
+          <li>Updated to JUnit 5.8.0</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
       <td style="vertical-align: top">8/19/2021</td>
-      <td style="vertical-align: top"><b>1.1.1</b></td>
+      <td style="vertical-align: top"><b>1.1.1-SNAPSHOT</b></td>
       <td style="vertical-align: top">
         <ul>
           <li>Fix NullPointerException with null object during the printing process</li>
+          <li>Updated to JUnit 5.7.2</li>
         </ul>
       </td>
     </tr>
     <tr>
       <td style="vertical-align: top">8/18/2021</td>
-      <td style="vertical-align: top"><b>1.1.0</b></td>
+      <td style="vertical-align: top"><b>1.1.0-SNAPSHOT</b></td>
       <td style="vertical-align: top">
         <ul>
           <li>Allow superclasses to declare testing methods</li>
@@ -89,7 +101,7 @@ Developed in Intellij IDEA, compatibility with other IDEs is not ensured.
     </tr>
     <tr>
       <td style="vertical-align: top">7/11/2021</td>
-      <td style="vertical-align: top"><b>1.0.0</b></td>
+      <td style="vertical-align: top"><b>1.0.0-SNAPSHOT</b></td>
       <td style="vertical-align: top">
         <ul>
           <li>Initial release. Completely new system from previous code</li>
