@@ -76,7 +76,7 @@ public class SolutionTestSolver implements Supplier<TestResults> {
         try {
             return solve();
         } catch(Exception e) {
-            e.printStackTrace();
+            e.getCause().printStackTrace();
             return null;
         }
     }
