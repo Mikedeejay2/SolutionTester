@@ -94,11 +94,63 @@ public final class SolveUtils {
         final Class<?> obj1Class = obj1.getClass();
         final Class<?> obj2Class = obj2.getClass();
         if(obj1Class.isArray() && obj2Class.isArray()) {
-            return Arrays.deepEquals((Object[]) obj1, (Object[]) obj2);
+            return Arrays.deepEquals(toObjectArray(obj1), toObjectArray(obj2));
         } else if(obj1Class.isArray() || obj2Class.isArray()) {
             return false;
         }
         return obj1.equals(obj2);
+    }
+
+    /**
+     * Convert a primitive array to an object array
+     *
+     * @param obj The input primitive array
+     * @return The converted object array
+     */
+    public static Object[] toObjectArray(Object obj) {
+        if(obj instanceof Object[]) return (Object[]) obj;
+        else if(obj instanceof byte[]) {
+            byte[] arr = (byte[]) obj;
+            Object[] res = new Object[arr.length];
+            for(int i = 0; i < arr.length; ++i) res[i] = arr[i];
+            return res;
+        } else if(obj instanceof short[]) {
+            short[] arr = (short[]) obj;
+            Object[] res = new Object[arr.length];
+            for(int i = 0; i < arr.length; ++i) res[i] = arr[i];
+            return res;
+        } else if(obj instanceof int[]) {
+            int[] arr = (int[]) obj;
+            Object[] res = new Object[arr.length];
+            for(int i = 0; i < arr.length; ++i) res[i] = arr[i];
+            return res;
+        } else if(obj instanceof long[]) {
+            long[] arr = (long[]) obj;
+            Object[] res = new Object[arr.length];
+            for(int i = 0; i < arr.length; ++i) res[i] = arr[i];
+            return res;
+        } else if(obj instanceof char[]) {
+            char[] arr = (char[]) obj;
+            Object[] res = new Object[arr.length];
+            for(int i = 0; i < arr.length; ++i) res[i] = arr[i];
+            return res;
+        } else if(obj instanceof float[]) {
+            float[] arr = (float[]) obj;
+            Object[] res = new Object[arr.length];
+            for(int i = 0; i < arr.length; ++i) res[i] = arr[i];
+            return res;
+        } else if(obj instanceof double[]) {
+            double[] arr = (double[]) obj;
+            Object[] res = new Object[arr.length];
+            for(int i = 0; i < arr.length; ++i) res[i] = arr[i];
+            return res;
+        } else if(obj instanceof boolean[]) {
+            boolean[] arr = (boolean[]) obj;
+            Object[] res = new Object[arr.length];
+            for(int i = 0; i < arr.length; ++i) res[i] = arr[i];
+            return res;
+        }
+        return null;
     }
 
     /**
@@ -111,7 +163,7 @@ public final class SolveUtils {
         if(obj == null) return "null";
         StringBuilder result = new StringBuilder();
         if(obj.getClass().isArray()) {
-            return _quotedToString((Object[]) obj);
+            return _quotedToString(toObjectArray(obj));
         }
         if(obj instanceof String) {
             result.append('\"');
@@ -149,7 +201,7 @@ public final class SolveUtils {
                     else if(o instanceof double[]) result.append(Arrays.toString((double[]) o));
                     else if(o instanceof boolean[]) result.append(Arrays.toString((boolean[]) o));
                 } else {
-                    result.append(_quotedToString((Object[]) o));
+                    result.append(_quotedToString(toObjectArray(o)));
                 }
             } else result.append(quotedToString(o));
             if(i < obj.length - 1) {
