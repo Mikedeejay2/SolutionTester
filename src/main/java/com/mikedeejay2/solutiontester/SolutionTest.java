@@ -65,9 +65,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * Running this class would result in text being printed to the console:
  * <pre>
  *         Expected        Run
- * │ addNums([2, 2]) → 4  │ 4  │ OK │
- * │ addNums([1, 2]) → 3  │ 3  │ OK │
- * │ addNums([5, 5]) → 10 │ 10 │ OK │
+ * │ addNums(2, 2) → 4  │ 4  │ OK │
+ * │ addNums(1, 2) → 3  │ 3  │ OK │
+ * │ addNums(5, 5) → 10 │ 10 │ OK │
  *
  * ✓ All Correct
  * </pre>
