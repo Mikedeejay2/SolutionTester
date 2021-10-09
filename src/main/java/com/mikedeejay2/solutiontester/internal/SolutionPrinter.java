@@ -6,6 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -160,6 +161,7 @@ public class SolutionPrinter implements Consumer<TestResults> {
             Object rawResult = testResult.getResults()[resultsI];
             String methodName = testResult.getMethodNames().get(methodNameMod);
             String inputs = SolveUtils.quotedToString(rawInputs);
+            inputs = inputs.substring(1, inputs.length() - 1);
             String solution = SolveUtils.quotedToString(rawSolution);
             String result = SolveUtils.quotedToString(rawResult);
             String curExpected = methodName + "(" + inputs + ") " + ARROW_CHAR + " " + result;
