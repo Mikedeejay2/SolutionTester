@@ -52,7 +52,7 @@ The dependency for SolutionTester is:
 <dependency>
     <groupId>com.mikedeejay2</groupId>
     <artifactId>solutiontester</artifactId>
-    <version>1.1.2</version>
+    <version>1.1.3</version>
 </dependency>
 ```
 ### Notes
@@ -69,6 +69,16 @@ Developed in Intellij IDEA, compatibility with other IDEs is not ensured.
     <th style="width: 60%">Changes</th>
   </thead>
   <tbody>
+    <tr>
+      <td style="vertical-align: top">10/9/2021</td>
+      <td style="vertical-align: top"><b>1.1.3</b></td>
+      <td style="vertical-align: top">
+        <ul>
+          <li>Fix ClassCastException when handling primitive result arrays</li>
+          <li>Updated to JUnit 5.8.1</li>
+        </ul>
+      </td>
+    </tr>
     <tr>
       <td style="vertical-align: top">9/17/2021</td>
       <td style="vertical-align: top"><b>1.1.2</b></td>
