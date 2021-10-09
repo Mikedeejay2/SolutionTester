@@ -76,6 +76,7 @@ Developed in Intellij IDEA, compatibility with other IDEs is not ensured.
         <ul>
           <li>Fix ClassCastException when handling primitive result arrays</li>
           <li>Updated to JUnit 5.8.1</li>
+          <li>Fix extra set of square brackets in expected results printing</li>
         </ul>
       </td>
     </tr>
