@@ -2,7 +2,7 @@
 A Java solution tester for easy testing of practice problems or algorithms.
 
 ### Uses
-SolutionTester was developed for use with online code practice websites such as CodingBat or Hackerrank wherein a set 
+SolutionTester was developed for use with online code practice websites such as CodingBat or LeetCode wherein a set 
 of inputs are given with the objective to be solved by a method. However, any situation where a set of inputs and 
 expected results are given is applicable for use with this
 solution tester.
