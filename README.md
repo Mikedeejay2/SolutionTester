@@ -70,6 +70,16 @@ Developed in Intellij IDEA, compatibility with other IDEs is not ensured.
   </thead>
   <tbody>
     <tr>
+      <td style="vertical-align: top">9/14/2023</td>
+      <td style="vertical-align: top"><b>1.1.4</b></td>
+      <td style="vertical-align: top">
+        <ul>
+          <li>Updated to JUnit 5.10.0</li>
+          <li>Updated to Jetbrains Annotations 24.0.1</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
       <td style="vertical-align: top">10/9/2021</td>
       <td style="vertical-align: top"><b>1.1.3</b></td>
       <td style="vertical-align: top">
