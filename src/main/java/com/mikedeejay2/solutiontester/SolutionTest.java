@@ -37,31 +37,31 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * Please view the Javadocs for the annotations on detailed implementation guides and uses.
  * <p>
  * Example code of a simple addition test:
- * <pre>
+ * <pre>{@code
  *  public class ExampleSolution implements SolutionTest {
  *      // Solution method that adds int a and int b together. Method will
  *      // receive inputs from inputs method below and be compared
  *      // with the expected results from below as well.
- *      &#064;Solution
+ *     @Solution
  *      public int addNums(int a, int b) {
  *          return a + b;
  *      }
  *
  *      // The inputs method, returning 3 sets of arguments, each set consisting
  *      // of two ints because the addNums method requires two ints as arguments
- *      &#064;Inputs
+ *      @Inputs
  *      public Object[][] inputs() {
  *          return new Object[][]{ {2, 2}, {1, 2}, {5, 5} };
  *      }
  *
  *      // The results method, returning 3 ints as the expected results. Since 3
  *      // input sets are specified, 3 results should be specified as well.
- *      &#064;Results
+ *      @Results
  *      public Object[] results() {
  *          return new Object[]{ 4, 3, 10 };
  *      }
  *  }
- * </pre>
+ * }</pre>
  * Running this class would result in text being printed to the console:
  * <pre>
  *         Expected        Run

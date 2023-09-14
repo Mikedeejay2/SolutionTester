@@ -21,12 +21,12 @@ import java.lang.annotation.Target;
  * solution method
  * <p>
  * Example code, part of <a href="https://github.com/Mikedeejay2/SolutionTesterExample/blob/master/src/main/java/com/mikedeejay2/example/ExampleSolution.java">ExampleSolution</a>:
- * <pre>
- *  &#064;Results
+ * <pre>{@code
+ *  @Results
  *  public Object[] results() {
  *      return new Object[]{ 4, 3, 10 };
  *  }
- * </pre>
+ * }</pre>
  *
  * @author Mikedeejay2
  * @since 1.0.0

@@ -24,12 +24,12 @@ import java.lang.annotation.Target;
  * argument index.
  * <p>
  * Example code, part of <a href="https://github.com/Mikedeejay2/SolutionTesterExample/blob/master/src/main/java/com/mikedeejay2/example/ExampleSolution.java">ExampleSolution</a>:
- * <pre>
- *  &#064;Inputs
+ * <pre>{@code
+ *  @Inputs
  *  public Object[][] inputs() {
  *      return new Object[][]{ {2, 2}, {1, 2}, {5, 5} };
  *  }
- * </pre>
+ * }</pre>
  *
  * @author Mikedeejay2
  * @since 1.0.0

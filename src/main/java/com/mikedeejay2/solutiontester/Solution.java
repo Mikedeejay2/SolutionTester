@@ -21,12 +21,12 @@ import java.lang.annotation.Target;
  * the data type requested by the solution method at the given argument index.
  * <p>
  * Example code, part of <a href="https://github.com/Mikedeejay2/SolutionTesterExample/blob/master/src/main/java/com/mikedeejay2/example/ExampleSolution.java">ExampleSolution</a>:
- * <pre>
+ * <pre>{@code
  *  &#064;Solution
  *  public int addNums(int a, int b) {
  *      return a + b;
  *  }
- * </pre>
+ * }</pre>
  *
  * @author Mikedeejay2
  * @since 1.0.0
