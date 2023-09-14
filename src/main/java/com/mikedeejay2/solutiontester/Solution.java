@@ -22,7 +22,7 @@ import java.lang.annotation.Target;
  * <p>
  * Example code, part of <a href="https://github.com/Mikedeejay2/SolutionTesterExample/blob/master/src/main/java/com/mikedeejay2/example/ExampleSolution.java">ExampleSolution</a>:
  * <pre>{@code
- *  &#064;Solution
+ *  {@literal @}Solution
  *  public int addNums(int a, int b) {
  *      return a + b;
  *  }

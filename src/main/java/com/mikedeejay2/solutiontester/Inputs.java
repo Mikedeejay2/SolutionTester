@@ -15,7 +15,7 @@ import java.lang.annotation.Target;
  * <p>
  * Array lengths of both the inputs and results method <strong>must be the same length</strong>, as differing lengths
  * would lead to impossible or inaccurate comparisons of solution tests and expected results. The logic between the
- * {@link Inputs} and {@link Results} method is that <code>Inputs[0] -&gt; Solutions[0] -&gt; Results[0]</code>.
+ * {@link Inputs} and {@link Results} method is that <code>Inputs[0] -{@literal >} Solutions[0] -{@literal >} Results[0]</code>.
  * <p>
  * The length of all sub-arrays (<i><code>Inputs[X][this.length]</code></i>) in the {@link Inputs} annotation should
  * match the amount of arguments in the solution methods such that <code>Inputs[0][0]</code> is the first argument of
@@ -25,7 +25,7 @@ import java.lang.annotation.Target;
  * <p>
  * Example code, part of <a href="https://github.com/Mikedeejay2/SolutionTesterExample/blob/master/src/main/java/com/mikedeejay2/example/ExampleSolution.java">ExampleSolution</a>:
  * <pre>{@code
- *  @Inputs
+ *  {@literal @}Inputs
  *  public Object[][] inputs() {
  *      return new Object[][]{ {2, 2}, {1, 2}, {5, 5} };
  *  }

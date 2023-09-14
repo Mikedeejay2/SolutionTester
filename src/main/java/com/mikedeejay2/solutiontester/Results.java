@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation used to define that a method returns the expected results that will be compared to the the
+ * Annotation used to define that a method returns the expected results that will be compared to the
  * {@link Solution} annotated methods.
  * <p>
  * Methods annotated with this annotation should return an Object array <code>Object[]</code> representing each
@@ -15,14 +15,14 @@ import java.lang.annotation.Target;
  * <p>
  * Array lengths of both the inputs and results method <strong>must be the same length</strong>, as differing lengths
  * would lead to impossible or inaccurate comparisons of solution tests and expected results. The logic between the
- * {@link Inputs} and {@link Results} method is that <code>Inputs[0] -&gt; Solutions[0] -&gt; Results[0]</code>.
+ * {@link Inputs} and {@link Results} method is that <code>Inputs[0] -{@literal >} Solutions[0] -{@literal >} Results[0]</code>.
  * <p>
  * The data type of the returned Objects held in the <code>Object[]</code> array should match the return data type of the
  * solution method
  * <p>
  * Example code, part of <a href="https://github.com/Mikedeejay2/SolutionTesterExample/blob/master/src/main/java/com/mikedeejay2/example/ExampleSolution.java">ExampleSolution</a>:
  * <pre>{@code
- *  @Results
+ *  {@literal @}Results
  *  public Object[] results() {
  *      return new Object[]{ 4, 3, 10 };
  *  }
